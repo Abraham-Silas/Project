@@ -1,0 +1,108 @@
+body{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background-image: url(../images/display/img6.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+} 
+
+.splashContainer{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+}
+
+#registerFrm{
+    position: relative;
+    height: 100%;
+    background: gold;
+}
+
+#registerFrm form{
+    position: relative;
+    width: 100%;
+    border-radius: 0 !important;
+    height: 100%;
+    background-color: #3B3B3B;
+}
+
+.upperNav{
+    position: relative;
+    display: inline-block;
+    background-color: #3B3B3B;
+    padding: 10px;
+    display: inline-flex;
+}
+
+.card-header{
+    background-color: goldenrod;
+    border-radius: 0 !important;
+}
+
+.upperNav span:nth-child(2){
+    position: absolute;
+    right: 0;
+    top: 23%;
+    display: inline-flex;
+}
+
+.upperNav span:nth-child(2) form{
+    width: 100%;
+    display: inline-flex;
+}
+
+.card-body label{
+    color: white;
+    font-size: 14pt;
+}
+
+.card-body input{
+    border-radius: 0;
+    background-color: transparent;
+    color: white;
+}
+
+.card-body input::placeholder{
+    color: white;
+}
+
+.card-body .row{
+    margin-bottom: 16px;
+}
+
+.card-body button{
+    border-radius: 0;
+    font-size: 13pt;
+}
+
+.card-body a{
+    margin-top: 10px;
+    font-size: 14pt;
+    color: gold;
+}
+
+.upperNav span:nth-child(2) input{
+    position: relative;
+    width: 40%;
+    margin-left: 10px;
+    border-radius: 0;
+    background: transparent;
+    color: white;
+}
+
+.upperNav span:nth-child(2) input::placeholder{
+    color: white;
+}
+
+.upperNav span:nth-child(2) button{
+    margin-left: 10px;
+    font-size: 13pt;
+    border-radius: 0;
+}
+
+.upperNav img{
+    position: relative;
+    width: 110px;
+    height: 52px;
+}

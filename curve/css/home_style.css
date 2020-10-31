@@ -1,0 +1,1276 @@
+::-webkit-scrollbar {
+    background-color: black;
+    width: 5px;
+    display: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background: goldenrod;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: black;
+}
+
+nav {
+    position: relative;
+    width: 100%;
+    padding: 0;
+    box-shadow: 1px 1px 1px 2px black;
+    background-color: #000000;
+}
+
+nav span:nth-child(1) img {
+    position: relative;
+    width: 123px;
+    height: 55px;
+}
+
+nav span:nth-child(2) input {
+    background: transparent;
+    border-radius: 20px;
+    padding: 15px;
+    font-size: 14pt;
+    padding-right: 38px;
+}
+
+nav span:nth-child(2) input:focus {
+    background: transparent;
+    color: white;
+    -webkit-appearance: none;
+    outline: none;
+    box-shadow: none;
+}
+
+nav span:nth-child(2) input::placeholder {
+    color: white;
+}
+
+.postSearch {
+    position: absolute;
+    font-size: 17pt;
+    top: 10px;
+    right: 12px;
+    color: white;
+    border-radius: 50%;
+}
+
+nav span:nth-child(3) div {
+    position: relative;
+    float: right;
+    color: white;
+    display: inline-flex;
+}
+
+nav span:nth-child(3) img {
+    position: relative;
+    top: 0px;
+    width: 35px;
+    height: 35px;
+}
+
+nav span:nth-child(3) img:hover {
+    cursor: pointer;
+}
+
+nav span:nth-child(3) div i {
+    position: relative;
+    font-size: 17pt;
+    color: white;
+    top: 5px;
+    margin-right: 7px;
+    border: 0px solid white;
+    border-radius: 5px;
+    padding-top: 4px;
+    text-decoration-line: none;
+}
+
+nav span:nth-child(3) div i:hover {
+    cursor: pointer;
+}
+
+nav span:nth-child(3) div span:nth-child(1) {
+    position: relative;
+    margin-right: 10px;
+    padding-top: 3px;
+    display: inline-flex;
+}
+
+nav span:nth-child(3) div span:nth-child(1) label:nth-child(1) {
+    position: relative;
+    top: 6px;
+}
+
+nav span:nth-child(3) div #switch_view {
+    position: relative;
+    top: 10%;
+    width: 50px;
+    height: 26px;
+    border: 3px solid blue;
+    border-radius: 30px;
+    padding: 0;
+}
+
+nav span:nth-child(3) div #switch_view label {
+    position: relative;
+    top: -1px;
+    left: 0;
+    width: 17px;
+    height: 17px;
+    border-radius: 50%;
+    background: white;
+    margin: 2px;
+    transition: left .5s;
+}
+
+nav span:nth-child(3) div input {
+    position: absolute;
+    z-index: 0;
+    visibility: hidden;
+}
+
+nav span:nth-child(3) div #switch_view label:hover {
+    cursor: pointer;
+}
+
+.postContent {
+    position: relative;
+    width: 100%;
+    height: 90vh;
+    background: rgb(80, 79, 79);
+}
+
+#posts {
+    position: relative;
+    width: 44%;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0px;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+}
+
+#posts::-webkit-scrollbar {
+    display: none;
+}
+
+#messages {
+    position: relative;
+    width: 28%;
+    height: 100%;
+}
+
+#messages h4 {
+    padding: 5px;
+    padding-left: 9px;
+    font-size: 20pt;
+    font-weight: normal;
+    background-color: goldenrod;
+    margin: 0;
+}
+
+#messages h4 i {
+    position: relative;
+    top: -1px;
+    padding: 7px;
+    font-size: 16pt;
+}
+
+#messages h4 i:hover {
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.recent_chats {
+    position: relative;
+    display: block;
+}
+
+.recent_chats .user {
+    position: relative;
+    display: inline-flex;
+    width: 98.5%;
+    padding-top: 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 0;
+    background-color: black;
+    margin: 2px;
+}
+
+.recent_chats .user:hover {
+    background-color: rgba(0, 0, 0, .7);
+    cursor: pointer;
+}
+
+.recent_chats .user span:nth-child(2) {
+    padding-left: 4px;
+}
+
+.recent_chats .user img {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+.recent_chats .user b {
+    position: relative;
+    font-size: 16pt;
+    font-weight: lighter;
+    color: white;
+    margin-left: 4px;
+    user-select: none;
+    pointer-events: none;
+    display: flex;
+}
+
+.recent_chats .user span:nth-child(2) b:nth-child(2) {
+    position: relative;
+    top: -2px;
+    display: inline;
+    font-size: 11pt;
+    padding: 0;
+}
+
+.recent_chats .user span:nth-child(2) b:nth-child(3) {
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    right: 5px;
+    top: 5px;
+    font-size: 15pt;
+    font-weight: bold;
+    padding-top: 3px;
+    padding-left: 5px;
+    border-radius: 50%;
+    pointer-events: all;
+}
+
+.recent_chats .user span:nth-child(2) b:nth-child(3):hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+}
+
+.recent_chats .user span:nth-child(2) b:nth-child(2) i {
+    font-size: 7pt;
+}
+
+.offline {
+    color: red;
+}
+
+.online {
+    color: green;
+}
+
+#albums {
+    position: relative;
+    width: 28%;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.post span:nth-child(1) {
+    position: relative;
+    display: inline-flex;
+    margin: 0;
+    height: 4.2em;
+}
+
+.post .card-header span:nth-child(1) img {
+    border: 2px solid black;
+}
+
+.post span:nth-child(1) span label {
+    position: relative;
+    top: -1px;
+    display: block;
+    margin-left: 7px;
+}
+
+.post span:nth-child(1) span label:nth-child(1) {
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+.post span:nth-child(1) span label:hover {
+    color: rgb(214, 16, 26);
+    cursor: pointer;
+}
+
+.post span:nth-child(1) span:nth-child(2) label:nth-child(2) {
+    position: relative;
+    font-size: 10pt;
+    padding: 0;
+    top: -15px;
+}
+
+.post span:nth-child(1) span:nth-child(3) {
+    position: absolute;
+    right: 0;
+    display: inline-flex;
+}
+
+.post span:nth-child(1) span:nth-child(3) label {
+    position: relative;
+    top: 11px;
+    font-size: 13pt;
+}
+
+.post span:nth-child(1) span:nth-child(3) label:hover {
+    cursor: default;
+    color: black;
+}
+
+.post span:nth-child(1) span:nth-child(3) i {
+    position: relative;
+    top: 15px;
+    right: 15px;
+    font-size: 16pt;
+}
+
+.post span:nth-child(1) span:nth-child(3) i:hover {
+    cursor: pointer;
+}
+
+.post span:nth-child(2) div:nth-child(1) {
+    position: relative;
+    width: 100%;
+    display: block;
+    padding: 10px 10px 0px 10px;
+    font-size: 14pt;
+}
+
+.post span:nth-child(2) div:nth-child(2) {
+    position: relative;
+}
+
+.post span:nth-child(2) div:nth-child(2) a {
+    font-size: 14pt;
+    font-weight: bold;
+    padding: 10px;
+}
+
+.post span:nth-child(2) div:nth-child(3) {
+    position: relative;
+    width: 100%;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.post span:nth-child(2) div:nth-child(3)::-webkit-scrollbar {
+    display: block;
+    height: 5px;
+}
+
+.post span:nth-child(2) div:nth-child(2) span {
+    position: absolute;
+    right: 5px;
+    bottom: -40px;
+    border-radius: 5px;
+    background: black;
+    color: white;
+    padding-top: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    z-index: 99;
+    height: 32px;
+}
+
+.post span:nth-child(2) div:nth-child(2) span i {
+    font-style: normal;
+}
+
+.post span:nth-child(2) div:nth-child(3) img {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    pointer-events: none;
+}
+
+.post span:nth-child(2) div:nth-child(4) {
+    position: absolute;
+    top: -270px;
+    width: 100%;
+    z-index: 99;
+    background: transparent;
+    padding: 10px;
+}
+
+.post span:nth-child(2) div:nth-child(4) i {
+    font-size: 23pt;
+    padding-right: 12px;
+    padding-left: 10px;
+    padding-top: 9px;
+    padding-bottom: 8px;
+    border-radius: 8px;
+    opacity: .3;
+    transition: all .4s;
+}
+
+.post span:nth-child(2) div:nth-child(4) i:hover {
+    cursor: pointer;
+    opacity: 1;
+    background: whitesmoke;
+}
+
+.post span:nth-child(2) div:nth-child(4) i:nth-child(2) {
+    position: absolute;
+    right: 5px;
+}
+
+.post span:nth-child(3) img {
+    border: 2px solid white;
+    margin: 0;
+    width: 33px;
+    height: 33px;
+}
+
+.post span:nth-child(3) label {
+    position: relative;
+    font-weight: bold;
+    font-size: 13pt;
+    left: -26px;
+}
+
+.post span:nth-child(3) img:nth-child(2) {
+    position: relative;
+    left: -13px;
+}
+
+.post span:nth-child(3) img:nth-child(3) {
+    position: relative;
+    left: -26px;
+}
+
+.post span:nth-child(3) span {
+    float: right;
+}
+
+.post span:nth-child(3) span i {
+    position: relative;
+    top: 5px;
+    font-size: 18pt;
+    margin-right: 4px;
+}
+
+.post span:nth-child(3) span i:hover {
+    cursor: pointer;
+}
+
+.post {
+    position: relative;
+    margin-bottom: 5px;
+    border-radius: 0;
+}
+
+.post .card-header {
+    border-radius: 0;
+}
+
+#createPost {
+    position: fixed;
+    width: 45px;
+    height: 45px;
+    right: 20px;
+    bottom: 20px;
+    padding: 10px;
+    border: 2px solid #000000;
+}
+
+#createPost i {
+    font-size: 15pt;
+}
+
+.modal-content div:nth-child(2) textarea,
+.modal-content div:nth-child(2) input {
+    border-radius: 0 !important;
+    outline: none;
+    box-shadow: none;
+}
+
+.modal-footer input {
+    position: absolute;
+    visibility: hidden;
+    z-index: 0;
+    left: 0;
+}
+
+.modal-footer label {
+    position: absolute;
+    left: 10px;
+    font-size: 17pt;
+}
+
+.modal-footer label:hover {
+    cursor: pointer;
+}
+
+#albums h4:not(i) {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    background-color: goldenrod;
+    font-weight: lighter;
+    font-size: 20pt;
+    padding: 4px;
+    margin: 0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+#albums h4 i {
+    position: relative;
+    top: -1px;
+    padding: 4px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+#albums h5:hover {
+    cursor: pointer;
+    background: black;
+    color: white;
+}
+
+.albumsFeed div {
+    position: relative;
+    margin: 3px;
+    background-color: white;
+}
+
+.albumsFeed div h5 a {
+    font-size: 11pt;
+}
+
+.albumsFeed div h5 div b {
+    font-weight: bold;
+}
+
+.albumsFeed div span:nth-child(1) b {
+    font-weight: lighter;
+}
+
+.albumsFeed div span:nth-child(1) i {
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    padding-left: 5px;
+    padding-top: 4px;
+    pointer-events: all;
+}
+
+.albumsFeed div span:nth-child(1) i:hover {
+    background-color: white;
+    color: black;
+}
+
+.albumsFeed div span:nth-child(2) {
+    display: block;
+}
+
+.albumsFeed div span:nth-child(2) img {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    left: 0;
+    border: 2px solid white;
+}
+
+.albumsFeed div span:nth-child(2) img:nth-child(2) {
+    position: relative;
+    left: -11px;
+}
+
+.albumsFeed div span:nth-child(2) img:nth-child(3) {
+    position: relative;
+    left: -22px;
+}
+
+.albumsFeed div span:nth-child(2) label {
+    position: relative;
+    font-size: 11pt;
+    left: -25px;
+}
+
+.albumsFeed i {
+    pointer-events: none;
+}
+
+#albums h4 i:hover {
+    background-color: black;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+}
+
+.albumsFeed div .albumImages {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    background: black;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 0px;
+    transition: all .9s;
+    scroll-behavior: smooth;
+}
+
+.albumsFeed div .albumImages div {
+    position: relative;
+    width: 33%;
+    height: 100px;
+    padding: 0;
+    margin: 0;
+    margin-left: 1px;
+    margin-top: 1px;
+}
+
+.albumsFeed div .albumImages img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.albumsFeed div .albumImages i {
+    position: absolute;
+    bottom: 4px;
+    left: 4px;
+    z-index: 99;
+    font-size: 14pt;
+    color: black;
+    font-weight: bold;
+    pointer-events: all;
+}
+
+.albumsFeed div .albumImages i:hover {
+    color: red;
+    cursor: pointer;
+}
+
+.albumsFeed div .albumImages i:nth-child(2) {
+    left: 30px;
+}
+
+.dropdown-toggle::after {
+    display: none;
+}
+
+.viewAlbum,
+#notifications {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background-color: rgba(0, 0, 0, .7);
+}
+
+.albumDetails {
+    position: relative;
+    width: 90%;
+    height: 96%;
+    left: 5%;
+    right: 5%;
+    top: 2%;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.albumDetails h4 {
+    background-color: grey;
+    border-radius: 5px 5px 0 0;
+}
+
+.albumDetails h4 i {
+    padding: 5px;
+    padding-right: 8px;
+    padding-left: 8px;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+}
+
+.albumDetails h4 i:hover {
+    cursor: pointer;
+}
+
+.al-images {
+    position: relative;
+    border-right: 1px solid grey;
+    border-left: 1px solid grey;
+    padding: 3px;
+    padding-left: 4px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.al-images span {
+    position: relative;
+    top: 0;
+}
+
+.al-images i {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 8%;
+    background-color: orange;
+    top: -66px;
+    left: 2px;
+    padding-top: 1px;
+    padding-left: 4px;
+    font-size: 17pt;
+    z-index: 99;
+    display: none;
+}
+
+.al-images i:hover {
+    cursor: pointer;
+    background-color: red;
+    color: white;
+}
+
+.albumDetails .row {
+    height: 90%;
+}
+
+#al-list img {
+    position: relative;
+    width: 173px;
+    height: 150px;
+    background-size: cover;
+    margin-right: 0;
+    margin-bottom: 4px;
+    display: inline-block;
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.comments {
+    margin: 0;
+    height: 88.3%;
+    background-color: whitesmoke;
+    display: block;
+}
+
+.userComment {
+    position: relative;
+    padding: 0;
+    margin: 0;
+    bottom: 1px;
+    display: flex;
+}
+
+.userComment textarea {
+    border-radius: 0 !important;
+}
+
+.userComment textarea:focus {
+    -webkit-appearance: none;
+    box-shadow: none;
+    outline: none;
+}
+
+.userComment button {
+    border-radius: 0px 0px 5px 0px !important;
+}
+
+#newAlbImgs {
+    position: absolute;
+    left: 0;
+    visibility: hidden;
+}
+
+.albumViewMenu label {
+    cursor: pointer;
+}
+
+.albumViewMenu button {
+    font-size: large;
+    background-color: whit;
+    color: black;
+    transition: all .5s;
+}
+
+.albumViewMenu button i {
+    position: relative;
+    bottom: -4px;
+}
+
+.albumViewMenu button:focus {
+    border-radius: 0 !important;
+    box-shadow: 0;
+    outline: 0;
+    -webkit-appearance: none;
+}
+
+.albumViewMenu button:hover {
+    background-color: black;
+    color: white;
+}
+
+.albumViewMenu div {
+    position: absolute;
+    left: 14px;
+    bottom: 1px;
+    display: inline-block;
+    font-size: 15pt;
+}
+
+.albumViewMenu div i {
+    color: green;
+}
+
+.albumViewMenu div label {
+    position: relative;
+    bottom: -1px;
+}
+
+.clearDelete {
+    display: none;
+}
+
+.viewAlbum,
+#addImages {
+    display: none;
+}
+
+#uploadImages label {
+    width: 100%;
+    height: 100%;
+    display: block;
+    cursor: pointer;
+    font-size: 19pt;
+    margin: 10px 10px 7px 7px;
+    text-align: center;
+}
+
+#uploadImages img {
+    width: 119px;
+    height: 110px;
+    margin-bottom: 3px;
+    margin-right: 3px;
+    object-fit: cover;
+}
+
+#addImages {
+    position: relative;
+    left: 3px;
+}
+
+.userProfileWindow,
+#comments_window {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, .7);
+    display: none;
+}
+
+.userProfileWindow {
+    z-index: 9999;
+}
+
+#comments_window {
+    z-index: 999;
+}
+
+.profileDetails {
+    position: relative;
+    width: 80%;
+    height: 97%;
+    left: 10%;
+    right: 10%;
+    top: 1.5%;
+    background: white;
+    border-radius: 5px;
+    display: flex;
+}
+
+.jumbotron {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    border-radius: 5px 0px 0px 5px;
+}
+
+.jumbotron div:nth-child(1) {
+    position: relative;
+    width: 100%;
+    height: 50%;
+    object-fit: cover;
+    border-radius: 4px 0px 0px 0px;
+}
+
+.jumbotron div:nth-child(1) h3 {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background: black;
+    color: white;
+    margin: 0;
+}
+
+.profileDetails .posts {
+    position: relative;
+    width: 54%;
+    height: 100%;
+    top: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border-radius: 0px 5px 2px 0px;
+}
+
+.profileDetails .posts h4 {
+    position: sticky;
+    width: 100%;
+    top: 0;
+    z-index: 999;
+    background: gray;
+}
+
+.profileDetails .posts h4 i {
+    position: relative;
+    top: 2px;
+    right: -3px;
+    padding-left: 7px;
+    padding-right: 7px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+}
+
+.profileDetails .posts h4 i:hover {
+    cursor: pointer;
+}
+
+#profileImage {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+#changeProfilePic {
+    position: absolute;
+    left: 9px;
+    bottom: 45px;
+    font-size: 17pt;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    padding-left: 30px;
+    padding-right: 30px;
+    background-color: white;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+#changeProfile {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    visibility: hidden;
+}
+
+.userEditDetails label,
+#profileImage label {
+    display: inline-flex;
+}
+
+.userEditDetails input,
+#profileImage input {
+    display: none;
+}
+
+.userEditDetails b:hover,
+#profileImage b:hover {
+    cursor: pointer;
+}
+
+#comments_section {
+    position: relative;
+    width: 44%;
+    height: 90%;
+    left: 26%;
+    right: 26%;
+    top: 4%;
+    background-color: white;
+    border-radius: 4px;
+}
+
+#comments_section textarea {
+    border-radius: 0;
+    border-top: 0;
+    box-shadow: none;
+    outline: none;
+    width: 90%;
+    background: transparent;
+    color: white;
+}
+
+#comments_section textarea::placeholder {
+    color: white;
+}
+
+#comment_controls {
+    position: relative;
+    background: rgba(0, 0, 0, .9);
+    display: none;
+}
+
+#comment_controls span {
+    position: absolute;
+    height: 100%;
+    right: 0;
+    top: 0;
+    margin: 0;
+    padding: 1;
+}
+
+#comment_controls span button {
+    position: relative;
+    border-radius: 0;
+    font-size: 13pt;
+    left: -1px;
+}
+
+.comment {
+    display: inline-block;
+    flex-wrap: wrap;
+}
+
+.comment:hover {
+    background: lightgrey;
+    cursor: pointer;
+}
+
+.comment a {
+    position: relative;
+    font-weight: bold;
+    top: 1px;
+}
+
+.comment b {
+    font-weight: normal;
+    font-size: 11pt;
+}
+
+.comment span img {
+    width: 30px;
+    height: 30px;
+}
+
+.comment span {
+    font-size: 13pt;
+}
+
+.comment_replies img {
+    position: relative;
+    width: 23px;
+    height: 23px;
+    border: 2px solid white;
+}
+
+.comment_replies img:nth-child(2) {
+    left: -10px;
+}
+
+.comment_replies img:nth-child(3) {
+    left: -20px;
+}
+
+.comment_replies span {
+    position: relative;
+    left: -20px;
+}
+
+.comment span:nth-child(1) a {
+    color: black;
+}
+
+.comment span:nth-child(2) {
+    position: relative;
+    font-weight: normal;
+    top: 1px;
+    user-select: text contain;
+}
+
+#post_comments {
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#post_comments #no_comments i,
+#no_replies i {
+    margin-left: 20px;
+    font-size: 80pt;
+    color: lightgrey;
+}
+
+#no_comments label,
+#no_replies label {
+    position: relative;
+    font-size: 20pt;
+    color: lightgrey;
+}
+
+#no_comments label {
+    left: 2px
+}
+
+#no_replies label {
+    left: 15px;
+}
+
+#no_comments {
+    position: relative;
+    left: 35%;
+    top: 27%;
+}
+
+#no_replies {
+    position: relative;
+    left: 35%;
+    top: 35%;
+}
+
+#close_comments {
+    position: absolute;
+    right: 7px;
+    top: 7px;
+    font-size: 20pt;
+    border-radius: 0;
+    padding: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    cursor: pointer;
+}
+
+#new_comment {
+    position: absolute;
+    bottom: 17px;
+    right: 17px;
+    width: 43px;
+    height: 43px;
+    padding: 0;
+    padding-top: 4px;
+}
+
+#new_comment i {
+    font-size: 17pt;
+}
+
+.comment_reply:hover,
+.reply_love:hover {
+    color: rgb(254, 134, 34);
+    cursor: pointer;
+}
+
+#comment_replies {
+    height: 0vh;
+    display: none;
+    transition: height .4s ease;
+}
+
+#return_to_comments {
+    display: none;
+    cursor: pointer;
+}
+
+#notifications_count,
+#report_notification_count,
+#chats_notification_count {
+    position: absolute;
+    top: 0;
+    right: -5px;
+    width: 15px;
+    height: 16px;
+    padding: 2px;
+    padding-top: 4px;
+    text-align: center;
+    border-radius: 50%;
+    font-size: 7pt;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    background-color: red;
+    pointer-events: none;
+}
+
+.reacted {
+    color: red;
+}
+
+.unreacted {
+    color: black;
+}
+
+.comment_response span,
+.reply_response span {
+    pointer-events: none;
+}
+
+#notifications {
+    display: none;
+}
+
+#notif_content {
+    position: relative;
+    width: 40%;
+    top: 7px;
+    right: 30;
+    left: 30%;
+    height: 98%;
+    border-radius: 5px;
+    background-color: rgb(255, 255, 255);
+}
+
+#notification_list li {
+    border-radius: 0;
+}
+
+#close_notification:hover {
+    cursor: pointer;
+}
+
+.userMenu {
+    position: absolute;
+    width: 200px;
+    top: 51px;
+    right: -7px;
+    z-index: 999;
+    display: none;
+}
+
+.userMenu a {
+    text-decoration: none;
+    color: black;
+    font-size: 12pt;
+}
+
+.userMenu a:hover {
+    background-color: rgba(0, 0, 0, .9);
+    color: white;
+}
+
+.toogleUserMenu {
+    position: relative;
+}

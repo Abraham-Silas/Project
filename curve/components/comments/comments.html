@@ -1,0 +1,23 @@
+<div id="comments_window">
+    <div id="comments_section">
+        <h4 class="card-header">
+            <b class="fa fa-arrow-left mr-1" id="return_to_comments"></b>
+            <span id="com_section"><b class="fas fa-comment mr-1"></b>Comments</span>
+            <i class="fa fa-times" id="close_comments"></i>
+        </h4>
+        <section id="post_comments">
+            <!-- User Comments Will Appear Here -->
+        </section>
+        <section id="comment_replies">
+            <!-- Comment replies will appear here -->
+        </section>
+        <section id="comment_controls">
+            <textarea rows="2" placeholder="Type your comment here..." class="form-control" id="comment_text"></textarea>
+            <span>
+                <input type="hidden" id="comment_post_id"/>
+                <button class="btn btn-warning btn-sm" data-type="comment" id="send_comment">Send</button>
+            </span>
+        </section>
+        <button class="rounded-circle btn btn-dark" id="new_comment"><i class="fa fa-plus"></i></button>
+    </div>
+</div>
