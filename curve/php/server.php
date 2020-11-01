@@ -690,6 +690,7 @@
             while($reaction = $postReacttions->fetch_assoc())
             {
                 $data["user"] = "$reaction[name] $reaction[surname]";
+                $data["profile"] = "data:image/*;base64,".base64_encode($reaction["profile"]);
                 $data["type"] = "post";
                 $data["reaction"] = $reaction["reaction_id"];
                 $data["datetime"] = $reaction["r_date"];
@@ -703,6 +704,7 @@
             while($reaction = $postReacttions->fetch_assoc())
             {
                 $data["user"] = "$reaction[name] $reaction[surname]";
+                $data["profile"] = "data:image/*;base64,".base64_encode($reaction["profile"]);
                 $data["type"] = "comment";
                 $data["reaction"] = $reaction["comment_id"];
                 $data["datetime"] = $reaction["comment_date"];
@@ -716,6 +718,7 @@
             while($reaction = $postReacttions->fetch_assoc())
             {
                 $data["user"] = "$reaction[name] $reaction[surname]";
+                $data["profile"] = "data:image/*;base64,".base64_encode($reaction["profile"]);
                 $data["type"] = "comment_react";
                 $data["reaction"] = $reaction["reaction_id"];
                 $data["datetime"] = $reaction["r_date"];
@@ -729,7 +732,8 @@
             while($reaction = $postReacttions->fetch_assoc())
             {
                 $data["user"] = "$reaction[name] $reaction[surname]";
-                $data["type"] = "comment_reply";
+                $data["profile"] = "data:image/*;base64,".base64_encode($reaction["profile"]);
+                $data["type"] = "reply";
                 $data["reaction"] = $reaction["reply_id"];
                 $data["datetime"] = $reaction["reply_date"];
                 array_push($notifications, $data);

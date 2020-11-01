@@ -83,8 +83,7 @@ import {
 
 $(() => {
     loadInitializers();
-
-    notications.check_notifications();
+    setTimeout(notications.check_notifications, 1000)
 
     $(document).on("click", ".albumsFeed h5", e => {
         let count = $(e.target).parent().children("div").children("div").length;
