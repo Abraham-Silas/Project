@@ -684,6 +684,58 @@
     {
         global $connection;
         $notifications = array();
-        
+        $postReacttions = $connection->query("SELECT * FROM `post_reactions`,`posts`,`users` WHERE `posts`.`user` = '$_SESSION[logged_user]' AND `post_reactions`.`post` = `posts`.`post_id` AND `post_reactions`.`status` = 'unread' AND `post_reactions`.`user` = `users`.`user_id` AND `post_reactions`.`user` <> '$_SESSION[logged_user]'");
+        if($postReacttions->num_rows > 0)
+        {
+            while($reaction = $postReacttions->fetch_assoc())
+            {
+                $data["user"] = "$reaction[name] $reaction[surname]";
+                $data["type"] = "post";
+                $data["reaction"] = $reaction["reaction_id"];
+                $data["datetime"] = $reaction["r_date"];
+                array_push($notifications, $data);
+            }
+        }
+
+        $postReacttions = $connection->query("SELECT * FROM `comments`,`posts`,`users` WHERE `posts`.`user` = '$_SESSION[logged_user]' AND `comments`.`post` = `posts`.`post_id` AND `comments`.`status` = 'unread' AND `comments`.`user` = `users`.`user_id` AND `comments`.`user` <> '$_SESSION[logged_user]'");
+        if($postReacttions->num_rows > 0)
+        {
+            while($reaction = $postReacttions->fetch_assoc())
+            {
+                $data["user"] = "$reaction[name] $reaction[surname]";
+                $data["type"] = "comment";
+                $data["reaction"] = $reaction["comment_id"];
+                $data["datetime"] = $reaction["comment_date"];
+                array_push($notifications, $data);
+            }
+        }
+
+        $postReacttions = $connection->query("SELECT * FROM `comments`,`comment_reactions`,`users` WHERE `comments`.`user` = '$_SESSION[logged_user]' AND `comments`.`comment_id` = `comment_reactions`.`comment` AND `comment_reactions`.`status` = 'unread' AND `comment_reactions`.`user` = `users`.`user_id` AND `comment_reactions`.`user` <> '$_SESSION[logged_user]'");
+        if($postReacttions->num_rows > 0)
+        {
+            while($reaction = $postReacttions->fetch_assoc())
+            {
+                $data["user"] = "$reaction[name] $reaction[surname]";
+                $data["type"] = "comment_react";
+                $data["reaction"] = $reaction["reaction_id"];
+                $data["datetime"] = $reaction["r_date"];
+                array_push($notifications, $data);
+            }
+        }
+
+        $postReacttions = $connection->query("SELECT * FROM `comments`,`comment_reply`,`users` WHERE `comments`.`user` = '$_SESSION[logged_user]' AND `comments`.`comment_id` = `comment_reply`.`comment_id` AND `comment_reply`.`status` = 'unread' AND `comment_reply`.`user` = `users`.`user_id` AND `comment_reply`.`user` <> '$_SESSION[logged_user]'");
+        if($postReacttions->num_rows > 0)
+        {
+            while($reaction = $postReacttions->fetch_assoc())
+            {
+                $data["user"] = "$reaction[name] $reaction[surname]";
+                $data["type"] = "comment_reply";
+                $data["reaction"] = $reaction["reply_id"];
+                $data["datetime"] = $reaction["reply_date"];
+                array_push($notifications, $data);
+            }
+        }
+
+        echo json_encode($notifications);
     }
 ?>

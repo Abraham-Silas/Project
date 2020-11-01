@@ -78,3 +78,4 @@ export let unfollowFriend = ".unfollowFriend"
 export let hideuser = ".hideUser"
 export let cancelRequest = ".cancelRequest"
 export let toogleUserMenu = ".toogleUserMenu"
+export let notifications_count = document.getElementById('notifications_count')

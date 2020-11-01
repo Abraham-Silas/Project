@@ -84,6 +84,8 @@ import {
 $(() => {
     loadInitializers();
 
+    notications.check_notifications();
+
     $(document).on("click", ".albumsFeed h5", e => {
         let count = $(e.target).parent().children("div").children("div").length;
         toggleView(e, count)
