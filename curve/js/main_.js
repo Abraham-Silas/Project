@@ -58,7 +58,7 @@ import {
     unfollowFriend,
     hideuser,
     cancelRequest,
-    toogleUserMenu, loadInitializers
+    toogleUserMenu, loadInitializers, close_messages_window, messagesWin, send_chat_message, chat_message, open_friend_requests, open_chats, close_requests_win, friend_requests_win
 } from './variables.js';
 
 import {
@@ -371,17 +371,32 @@ $(() => {
 
     $(document).on(click, friendRequest, e => {
         e.preventDefault()
-        friend.friendRequest({ new_friend_request: $(e.target).data("user") }, e)
+        let newFriendReq = {
+            new_friend_request: $(e.target).data("user"),
+            user: sessionStorage.getItem("logged_user")
+        }
+
+        friend.friendRequest(newFriendReq, e)
     })
 
     $(document).on(click, unfollowFriend, e => {
         e.preventDefault()
-        friend.unfollowFriend({ unfollow_friend: $(e.target).data("user") }, e);
+        let unfollowFriend = {
+            unfollow_friend: $(e.target).data("user"),
+            user: sessionStorage.getItem("logged_user")
+        }
+
+        friend.unfollowFriend(unfollowFriend, e);
     })
 
     $(document).on(click, cancelRequest, e => {
         e.preventDefault()
-        friend.cancelFriendRequest({ cancel_friend_request: $(e.target).data("user") }, e)
+        let cancelReq = {
+            cancel_friend_request: $(e.target).data("user"),
+            user: sessionStorage.getItem("logged_user")
+        }
+
+        friend.cancelFriendRequest(cancelReq, e)
     })
 
     $(hideuser).on(click, e => {
@@ -396,5 +411,58 @@ $(() => {
     $(close_notification).on(click, () => {
         $(notifications).fadeOut("slow")
         $(notification_list).empty();
+    })
+
+    $(close_messages_window).on(click, () => {
+        $(messagesWin).fadeOut("slow")
+    })
+
+    $(close_requests_win).on(click, () => {
+        $(friend_requests_win).fadeOut("slow")
+    })
+
+    $(open_friend_requests).on(click, () => {
+        friend.openFriendRequests({open_friend_requests: sessionStorage.getItem("logged_user")});
+    })
+
+    $(open_chats).on(click, () => {
+        $(messagesWin).fadeIn("slow");
+    })
+
+    $(document).on(click, ".acceptFriendRequest", e => {
+        let accept = {
+            accept_friend_request: $(e.target).data("request"),
+            user: sessionStorage.getItem("logged_user")
+        }
+
+        friend.acceptFriendRequest(accept, e)
+    })
+
+    $(document).on(click, ".rejectFriendRequest", e => {
+        alert($(e.target).data("request"))
+    })
+
+    $(document).on(click, ".acceptAlbumRequest", e => {
+        alert($(e.target).data("request"))
+    })
+
+    $(document).on(click, ".rejectAlbumRequest", e => {
+        alert($(e.target).data("request"))
+    })
+
+    $(document).on(click, ".acceptInvitationRequest", e => {
+        alert($(e.target).data("request"))
+    })
+
+    $(document).on(click, ".rejectInvitationRequest", e => {
+        alert($(e.target).data("request"))
+    })
+
+    $(send_chat_message).on(click, () => {
+        let new_message = {
+            user: sessionStorage.getItem("logged_user"),
+            message: $(chat_message).val(),
+            send_message_to: true
+        }
     })
 })

@@ -8,6 +8,8 @@
             redirectBackToIndex();
         if(isset($_SESSION["uploaded"]))
             unset($_SESSION["uploaded"]);
+        // Session Setting
+        echo "<script> sessionStorage.setItem('logged_user', $_SESSION[logged_user]); </script>";
     ?>
     <body>
         <div class="fluid-container">
@@ -43,7 +45,9 @@
             include_once './components/modals/album_view.php';
             include_once './components/profile/profile.php'; 
             include_once './components/comments/comments.html'; 
-            include_once './components/notifications/notification.php'; 
+            include_once './components/chats/messages.php';
+            include_once './components/notifications/notification.php';  
+            include_once './components/requests/requests.php';  
         ?>
         <script type="module" src="./js/main_.js"></script>
     </body>

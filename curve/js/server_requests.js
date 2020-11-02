@@ -1,6 +1,8 @@
-import { router } from "./variables.js";
+import {
+    router
+} from "./variables.js";
 
-class Requests{
+class Requests {
     server_request = data => {
         return ($.ajax({
             url: router,

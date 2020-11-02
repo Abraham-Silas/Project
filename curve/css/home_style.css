@@ -493,8 +493,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     font-size: 15pt;
 }
 
-.modal-content div:nth-child(2) textarea,
-.modal-content div:nth-child(2) input {
+.modal-content div:nth-child(2) textarea, .modal-content div:nth-child(2) input {
     border-radius: 0 !important;
     outline: none;
     box-shadow: none;
@@ -670,8 +669,10 @@ nav span:nth-child(3) div #switch_view label:hover {
     display: none;
 }
 
-.viewAlbum,
-#notifications {
+.viewAlbum, 
+#notifications, 
+#messagesWin,
+#friend_requests_win {
     position: fixed;
     left: 0;
     top: 0;
@@ -679,6 +680,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     height: 100%;
     z-index: 999;
     background-color: rgba(0, 0, 0, .7);
+    display: none;
 }
 
 .albumDetails {
@@ -846,8 +848,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     display: none;
 }
 
-.viewAlbum,
-#addImages {
+.viewAlbum, #addImages {
     display: none;
 }
 
@@ -874,8 +875,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     left: 3px;
 }
 
-.userProfileWindow,
-#comments_window {
+.userProfileWindow, #comments_window {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -991,18 +991,15 @@ nav span:nth-child(3) div #switch_view label:hover {
     visibility: hidden;
 }
 
-.userEditDetails label,
-#profileImage label {
+.userEditDetails label, #profileImage label {
     display: inline-flex;
 }
 
-.userEditDetails input,
-#profileImage input {
+.userEditDetails input, #profileImage input {
     display: none;
 }
 
-.userEditDetails b:hover,
-#profileImage b:hover {
+.userEditDetails b:hover, #profileImage b:hover {
     cursor: pointer;
 }
 
@@ -1120,15 +1117,13 @@ nav span:nth-child(3) div #switch_view label:hover {
     overflow-x: hidden;
 }
 
-#post_comments #no_comments i,
-#no_replies i {
+#post_comments #no_comments i, #no_replies i {
     margin-left: 20px;
     font-size: 80pt;
     color: lightgrey;
 }
 
-#no_comments label,
-#no_replies label {
+#no_comments label, #no_replies label {
     position: relative;
     font-size: 20pt;
     color: lightgrey;
@@ -1180,8 +1175,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     font-size: 17pt;
 }
 
-.comment_reply:hover,
-.reply_love:hover {
+.comment_reply:hover, .reply_love:hover {
     color: rgb(254, 134, 34);
     cursor: pointer;
 }
@@ -1197,8 +1191,8 @@ nav span:nth-child(3) div #switch_view label:hover {
     cursor: pointer;
 }
 
-#notifications_count,
-#report_notification_count,
+#notifications_count, 
+#report_notification_count, 
 #chats_notification_count {
     position: absolute;
     top: 0;
@@ -1223,16 +1217,21 @@ nav span:nth-child(3) div #switch_view label:hover {
     color: black;
 }
 
-.comment_response span,
-.reply_response span {
+.comment_response span, .reply_response span {
     pointer-events: none;
 }
 
-#notifications {
-    display: none;
+#notification_list,
+#requests_list {
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background-color: rgba(30, 20, 110, 1);
 }
 
-#notif_content {
+#notif_content,
+#requests_content {
     position: relative;
     width: 40%;
     top: 7px;
@@ -1243,11 +1242,14 @@ nav span:nth-child(3) div #switch_view label:hover {
     background-color: rgb(255, 255, 255);
 }
 
-#notification_list li {
+#notification_list li,
+#requests_content li {
     border-radius: 0;
+    border-top: none;
 }
 
-#close_notification:hover {
+#close_notification:hover,
+#close_requests_win:hover {
     cursor: pointer;
 }
 
@@ -1273,4 +1275,121 @@ nav span:nth-child(3) div #switch_view label:hover {
 
 .toogleUserMenu {
     position: relative;
+}
+
+#messages_content {
+    position: relative;
+    top: 10px;
+    width: 76%;
+    height: 97%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    left: 12%;
+    right: 12%;
+}
+
+#chats_container {
+    position: relative;
+    width: 100%;
+    height: 90.8%;
+}
+
+#chatsList {
+    position: relative;
+    height: 100%;
+    background-color: rgb(255, 255, 255);
+}
+
+#chat_messages {
+    position: relative;
+    padding-top: 7px;
+    padding-left: 7px;
+}
+
+#chat_users_list {
+    border-right: 1px solid lightgrey;
+}
+
+#chat_users_list li {
+    border-top: none;
+    border-right: none;
+    cursor: pointer;
+}
+
+#chat_users_list li img {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    margin-right: 5px;
+}
+
+#chat_users_list li b {
+    position: relative;
+    top: 2px;
+    font-size: 14pt;
+    font-weight: lighter;
+}
+
+#chat_message_controls {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 5px;
+    width: 100%;
+    display: inline-flex;
+    background-color: rgba(0, 0, 0, .7);
+}
+
+#chat_message_controls span:nth-child(1) i {
+    position: relative;
+    top: -5px;
+    font-size: 16pt;
+    color: white;
+    cursor: pointer;
+    display: block;
+}
+
+#chat_message_controls span:nth-child(2) textarea {
+    border: none;
+    outline: none;
+    box-shadow: none;
+    border-radius: 4px;
+}
+
+.sent_chat {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.sent_chat div {
+    position: relative;
+    display: inline-flex;
+    max-width: 50%;
+    padding: 7px;
+    background-color: goldenrod;
+    color: black;
+    border-radius: 10px;
+}
+
+.received_chat {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+}
+
+.received_chat div {
+    position: relative;
+    float: right;
+    display: block;
+    max-width: 50%;
+    padding: 7px;
+    background-color: grey;
+    color: black;
+    border-radius: 10px;
+}
+
+#close_messages_window {
+    cursor: pointer;
 }

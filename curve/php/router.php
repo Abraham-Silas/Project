@@ -84,6 +84,14 @@
             notifications(json_decode(json_encode($_POST)));
             break;
             
+        case isset($_POST["open_friend_requests"]):
+            openFriendRequests(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["accept_friend_request"]):
+            acceptFriendRequest(json_decode(json_encode($_POST)));
+            break;
+    
         default:
             redirectBackToIndex();
             break;

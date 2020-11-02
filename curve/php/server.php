@@ -69,8 +69,8 @@
             if(password_verify($loginObject->log_pass, $user["password"]))
             {
                 $_SESSION["logged_user"] = getUserDetails($user["username"]);
-                unset($_SESSION["logged"]);
                 toogleLoginStatus($_SESSION["logged_user"]);
+                unset($_SESSION["logged"]);
                 redirectToHome();
             }
             else {
@@ -341,7 +341,7 @@
     function invited($user)
     {
         global $connection;
-        $invited = $connection->query("SELECT * FROM `friend_requests` WHERE `user` = '$_SESSION[logged_user]' AND `requestee` = '$user'");
+        $invited = $connection->query("SELECT * FROM `requests` WHERE `user` = '$_SESSION[logged_user]' AND `requestee` = '$user'");
         return ($invited->num_rows > 0) ? true : false; 
     }
 
@@ -655,10 +655,11 @@
     function friend_request($object)
     {
         global $connection;
-        $newRequest = $connection->prepare("INSERT INTO `friend_requests` (`user`, `requestee`) VALUES (?, ?)");
-        $newRequest->bind_param("ii", $user, $friendee);
-        $user = $_SESSION["logged_user"];
+        $newRequest = $connection->prepare("INSERT INTO `requests` (`user`, `requestee`, `request_type`) VALUES (?, ?, ?)");
+        $newRequest->bind_param("iis", $user, $friendee, $reqType);
+        $user = $object->user;
         $friendee = $object->new_friend_request;
+        $reqType = "friend";
         if($newRequest->execute())
             echo 1;
         else
@@ -673,7 +674,7 @@
     function cancelFriendRequest($object)
     {
         global $connection;
-        $removeReq = $connection->query("DELETE FROM `friend_requests` WHERE `user` = '$_SESSION[logged_user]' AND `requestee` = '$object->cancel_friend_request'");
+        $removeReq = $connection->query("DELETE FROM `requests` WHERE `user` = '$object->user' AND `requestee` = '$object->cancel_friend_request'");
         if($removeReq)
             echo 1;
         else
@@ -691,7 +692,7 @@
             {
                 $data["user"] = "$reaction[name] $reaction[surname]";
                 $data["profile"] = "data:image/*;base64,".base64_encode($reaction["profile"]);
-                $data["type"] = "post";
+                $data["type"] = "post_react";
                 $data["reaction"] = $reaction["reaction_id"];
                 $data["datetime"] = $reaction["r_date"];
                 array_push($notifications, $data);
@@ -741,5 +742,45 @@
         }
 
         echo json_encode($notifications);
+    }
+
+    function openFriendRequests($object)
+    {
+        global $connection;
+        $requests = array();
+        $request = $connection->query("SELECT * FROM `requests`, `users` WHERE `requests`.`requestee` = '$object->open_friend_requests' AND `requests`.`user` = `users`.`user_id`");
+        if($request->num_rows > 0)
+        {
+            while($req = $request->fetch_assoc())
+            {
+                $data["id"] = $req["request_id"];
+                $data["user"] = "$req[name] $req[surname]";
+                $data["profile"] = "data:image/*;base64,".base64_encode($req["profile"]);
+                $data["type"] = $req["request_type"];
+                array_push($requests, $data);
+            }
+        }
+
+        echo json_encode($requests);
+    }
+
+    function acceptFriendRequest($object)
+    {
+        global $connection;
+        $accept = $connection->query("SELECT * FROM `requests` WHERE `request_id` = '$object->accept_friend_request'");
+        $request = $accept->fetch_assoc();
+
+        $newConnection = $connection->prepare("INSERT INTO `friends` (`user`, `friend`, `friendship_inception`) VALUES (?, ?, ?)");
+        $newConnection->bind_param("iis", $user, $friend, $date);
+        $user = $object->user;
+        $friend = $request["user"];
+        $date = date("Y-m-d", time());
+        if($newConnection->execute())
+        {
+            $removeRequest = $connection->query("DELETE FROM `requests` WHERE `request_id` = '$object->accept_friend_request'");
+            echo 1;
+        }
+        else
+            echo $newConnection->error;
     }
 ?>

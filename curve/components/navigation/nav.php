@@ -17,16 +17,16 @@
             </span>
             <span class="mr-2">
                 <i class="fas fa-flag" id="open_reports" data-toggle="tooltip" data-placement="bottom" title="Post Reports">
-                    <b id="report_notification_count">10</b>
+                    <b id="report_notification_count">0</b>
                 </i>
-                <i class="fas fa-user-plus" id="open_chats" data-toggle="tooltip" data-placement="bottom" title="Friend Requests">
-                    <b id="chats_notification_count">1</b>
+                <i class="fas fa-user-plus" id="open_friend_requests" data-toggle="tooltip" data-placement="bottom" title="Friend Requests">
+                    <b id="chats_notification_count">0</b>
                 </i>
                 <i class="fas fa-comment-alt" id="open_chats" data-toggle="tooltip" data-placement="bottom" title="Chat Messages">
-                    <b id="chats_notification_count">1</b>
+                    <b id="chats_notification_count">0</b>
                 </i>
                 <i class="fas fa-bell" id="open_notifications" data-toggle="tooltip" data-placement="bottom" title="Notifications">
-                    <b id="notifications_count">10</b>
+                    <b id="notifications_count">0</b>
                 </i>
             </span>
             <span>
