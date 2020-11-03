@@ -1,9 +1,9 @@
 import { requests } from "./server_requests.js"
-import { notifications, notifications_count, notification_list } from "./variables.js";
+import { friend_requests_count, notifications, notifications_count, notification_list } from "./variables.js";
 
 class Notification {
     _notifications = () => {
-        requests.server_request({ load_notifications: true }).done(response => {
+        requests.server_request({ load_notifications: sessionStorage.getItem("logged_user") }).done(response => {
             let notifs = JSON.parse(response);
 
             notifs.sort((a, b) => {
@@ -53,13 +53,20 @@ class Notification {
     }
 
     check_notifications = () => {
-        requests.server_request({ load_notifications: true }).done(response => {
+        requests.server_request({ load_notifications: sessionStorage.getItem("logged_user") }).done(response => {
             let notifs = JSON.parse(response);
             if (notifs.length > 0)
                 $(notifications_count).text(notifs.length)
             setTimeout(this.check_notifications, 1000)
         })
     }
+
+    _requests = () => {
+        requests.server_request({ load_requests: sessionStorage.getItem("logged_user") }).done(response => {
+            $(friend_requests_count).text(response)
+            setTimeout(this._requests, 1000)
+        })
+    }
 }
 
-export let notications = new Notification()
+export let _notifications = new Notification()

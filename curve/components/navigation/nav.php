@@ -20,7 +20,7 @@
                     <b id="report_notification_count">0</b>
                 </i>
                 <i class="fas fa-user-plus" id="open_friend_requests" data-toggle="tooltip" data-placement="bottom" title="Friend Requests">
-                    <b id="chats_notification_count">0</b>
+                    <b id="friend_requests_count">0</b>
                 </i>
                 <i class="fas fa-comment-alt" id="open_chats" data-toggle="tooltip" data-placement="bottom" title="Chat Messages">
                     <b id="chats_notification_count">0</b>

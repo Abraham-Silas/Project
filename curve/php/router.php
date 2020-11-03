@@ -91,6 +91,22 @@
         case isset($_POST["accept_friend_request"]):
             acceptFriendRequest(json_decode(json_encode($_POST)));
             break;
+
+        case isset($_POST["load_requests"]):
+            requestsNotifications(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["open_chats_win"]):
+            chatFriendList(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["send_message_to"]):
+            sendNewMessage(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["load_messages"]):
+            loadChatMessages(json_decode(json_encode($_POST)));
+            break;
     
         default:
             redirectBackToIndex();

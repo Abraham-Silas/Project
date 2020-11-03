@@ -1,5 +1,5 @@
 import { requests } from "./server_requests.js";
-import { friend_requests_win, requests_list } from "./variables.js";
+import { chat_users_list, friend_requests_win, messagesWin, requests_list } from "./variables.js";
 
 class Friend {
     friendRequest = (user, e) => {
@@ -151,6 +151,43 @@ class Friend {
             if(parseInt(response) == 1){
                 $(e.target).parent().parent().fadeOut("slow");
             }
+        })
+    }
+
+    friendView = object => {
+        let profile = $("<img/>", {
+            src: object.profile,
+            class: "rounded-circle"
+        })
+
+        let name = $("<b></b>", {
+            html: object.user
+        })
+
+        let binding = [profile, name]
+
+        let parent = $("<li></li>", {
+            class: "list-group-item list-group-item-action"
+        }).append(binding)
+
+        parent.attr("data-user", object.user_id)
+
+        return parent;
+    }
+
+    showFriendsList = object => {
+        requests.server_request(object).done(response => {
+            let friends = JSON.parse(response)
+            $(chat_users_list).empty()
+            if(friends.length > 0){
+                for(let friend of friends)
+                    $(chat_users_list).append(this.friendView(friend));
+            }
+            else{
+                $(chat_users_list).append(`<button class="btn btn-primary text-center">Start Chat</button>`);
+            }
+        }).then(() => {
+            $(messagesWin).fadeIn("slow");
         })
     }
 }

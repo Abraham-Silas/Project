@@ -1193,9 +1193,10 @@ nav span:nth-child(3) div #switch_view label:hover {
 
 #notifications_count, 
 #report_notification_count, 
-#chats_notification_count {
+#chats_notification_count,
+#friend_requests_count {
     position: absolute;
-    top: 0;
+    top: -4px;
     right: -5px;
     width: 15px;
     height: 16px;
@@ -1298,6 +1299,9 @@ nav span:nth-child(3) div #switch_view label:hover {
     position: relative;
     height: 100%;
     background-color: rgb(255, 255, 255);
+    padding: 7px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 #chat_messages {
@@ -1321,6 +1325,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     width: 40px;
     height: 40px;
     margin-right: 5px;
+    pointer-events: none;
 }
 
 #chat_users_list li b {
@@ -1328,6 +1333,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     top: 2px;
     font-size: 14pt;
     font-weight: lighter;
+    pointer-events: none;
 }
 
 #chat_message_controls {

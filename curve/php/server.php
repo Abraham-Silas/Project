@@ -685,7 +685,7 @@
     {
         global $connection;
         $notifications = array();
-        $postReacttions = $connection->query("SELECT * FROM `post_reactions`,`posts`,`users` WHERE `posts`.`user` = '$_SESSION[logged_user]' AND `post_reactions`.`post` = `posts`.`post_id` AND `post_reactions`.`status` = 'unread' AND `post_reactions`.`user` = `users`.`user_id` AND `post_reactions`.`user` <> '$_SESSION[logged_user]'");
+        $postReacttions = $connection->query("SELECT * FROM `post_reactions`,`posts`,`users` WHERE `posts`.`user` = '$object->load_notifications' AND `post_reactions`.`post` = `posts`.`post_id` AND `post_reactions`.`status` = 'unread' AND `post_reactions`.`user` = `users`.`user_id` AND `post_reactions`.`user` <> '$object->load_notifications'");
         if($postReacttions->num_rows > 0)
         {
             while($reaction = $postReacttions->fetch_assoc())
@@ -699,7 +699,7 @@
             }
         }
 
-        $postReacttions = $connection->query("SELECT * FROM `comments`,`posts`,`users` WHERE `posts`.`user` = '$_SESSION[logged_user]' AND `comments`.`post` = `posts`.`post_id` AND `comments`.`status` = 'unread' AND `comments`.`user` = `users`.`user_id` AND `comments`.`user` <> '$_SESSION[logged_user]'");
+        $postReacttions = $connection->query("SELECT * FROM `comments`,`posts`,`users` WHERE `posts`.`user` = '$object->load_notifications' AND `comments`.`post` = `posts`.`post_id` AND `comments`.`status` = 'unread' AND `comments`.`user` = `users`.`user_id` AND `comments`.`user` <> '$object->load_notifications'");
         if($postReacttions->num_rows > 0)
         {
             while($reaction = $postReacttions->fetch_assoc())
@@ -713,7 +713,7 @@
             }
         }
 
-        $postReacttions = $connection->query("SELECT * FROM `comments`,`comment_reactions`,`users` WHERE `comments`.`user` = '$_SESSION[logged_user]' AND `comments`.`comment_id` = `comment_reactions`.`comment` AND `comment_reactions`.`status` = 'unread' AND `comment_reactions`.`user` = `users`.`user_id` AND `comment_reactions`.`user` <> '$_SESSION[logged_user]'");
+        $postReacttions = $connection->query("SELECT * FROM `comments`,`comment_reactions`,`users` WHERE `comments`.`user` = '$object->load_notifications' AND `comments`.`comment_id` = `comment_reactions`.`comment` AND `comment_reactions`.`status` = 'unread' AND `comment_reactions`.`user` = `users`.`user_id` AND `comment_reactions`.`user` <> '$object->load_notifications'");
         if($postReacttions->num_rows > 0)
         {
             while($reaction = $postReacttions->fetch_assoc())
@@ -727,7 +727,7 @@
             }
         }
 
-        $postReacttions = $connection->query("SELECT * FROM `comments`,`comment_reply`,`users` WHERE `comments`.`user` = '$_SESSION[logged_user]' AND `comments`.`comment_id` = `comment_reply`.`comment_id` AND `comment_reply`.`status` = 'unread' AND `comment_reply`.`user` = `users`.`user_id` AND `comment_reply`.`user` <> '$_SESSION[logged_user]'");
+        $postReacttions = $connection->query("SELECT * FROM `comments`,`comment_reply`,`users` WHERE `comments`.`user` = '$object->load_notifications' AND `comments`.`comment_id` = `comment_reply`.`comment_id` AND `comment_reply`.`status` = 'unread' AND `comment_reply`.`user` = `users`.`user_id` AND `comment_reply`.`user` <> '$object->load_notifications'");
         if($postReacttions->num_rows > 0)
         {
             while($reaction = $postReacttions->fetch_assoc())
@@ -777,10 +777,95 @@
         $date = date("Y-m-d", time());
         if($newConnection->execute())
         {
-            $removeRequest = $connection->query("DELETE FROM `requests` WHERE `request_id` = '$object->accept_friend_request'");
-            echo 1;
+            $newConnection = $connection->prepare("INSERT INTO `friends` (`user`, `friend`, `friendship_inception`) VALUES (?, ?, ?)");
+            $newConnection->bind_param("iis", $user, $friend, $date);
+            $user = $request["user"];
+            $friend = $object->user;
+            $date = date("Y-m-d", time());
+            if($newConnection->execute())
+            {
+                $removeRequest = $connection->query("DELETE FROM `requests` WHERE `request_id` = '$object->accept_friend_request'");
+                echo 1;
+            }
+            else
+                echo $newConnection->error;
         }
         else
             echo $newConnection->error;
+    }
+
+    function requestsNotifications($object)
+    {
+        global $connection;
+        $getRequests = $connection->query("SELECT * FROM `requests` WHERE `requestee` = '$object->load_requests'");
+        echo $getRequests->num_rows;
+    }
+
+    function chatFriendList($object)
+    {
+        global $connection;
+        $list = array();
+        $friends = $connection->query("SELECT * FROM `friends`, `users` WHERE `friends`.`user` = '$object->open_chats_win' AND `friends`.`friend` = `users`.`user_id`");
+        if($friends->num_rows > 0)
+        {
+            while($user = $friends->fetch_assoc())
+            {
+                $data["user_id"] = $user["user_id"];
+                $data["user"] = "$user[name] $user[surname]";
+                $data["profile"] = "data:image/*;base64,".base64_encode($user["profile"]);
+                array_push($list, $data);
+            }
+        }
+
+        echo json_encode($list);
+    }
+
+    function sendNewMessage($object)
+    {
+        global $connection;
+        $message = $connection->prepare("INSERT INTO `messages` (`sender`, `receiver`, `message`, `msg_date`) VALUES (?, ?, ?, ?)");
+        $message->bind_param("iiss", $sender, $receiver, $msg, $date);
+        $sender = $object->sender;
+        $receiver = $object->send_message_to;
+        $date = date("Y-m-d H:i:s", time());
+        $msg = $connection->real_escape_string($object->message);
+        if($message->execute())
+            echo 1;
+        else
+            echo 0;
+    }
+
+    function loadChatMessages($object)
+    {
+        global $connection;
+        $messages = array();        
+        $removeUnread = $connection->query("UPDATE `messages` SET `status` = 'read' WHERE `sender` = '$object->load_messages' AND `receiver` = '$object->user'");
+        // get all the messages sent to another user
+        $sent = $connection->query("SELECT * FROM `messages` WHERE `sender` = '$object->user' AND `receiver` = '$object->load_messages'");
+        if($sent->num_rows > 0)
+        {
+            while($chat = $sent->fetch_assoc())
+            {
+                $data["message"] = stripcslashes($chat["message"]);
+                $data["msg_date"] = $chat["msg_date"];
+                $data["type"] = "s";
+                array_push($messages, $data);
+            }
+        }
+
+        // get all the messages sent to me!
+        $received = $connection->query("SELECT * FROM `messages` WHERE `sender` = '$object->load_messages' AND `receiver` = '$object->user'");
+        if($received->num_rows > 0)
+        {
+            while($chat = $received->fetch_assoc())
+            {
+                $data["message"] = stripcslashes($chat["message"]);
+                $data["msg_date"] = $chat["msg_date"];
+                $data["type"] = "r";
+                array_push($messages, $data);
+            }
+        }
+
+        echo json_encode($messages);
     }
 ?>

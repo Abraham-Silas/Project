@@ -58,7 +58,16 @@ import {
     unfollowFriend,
     hideuser,
     cancelRequest,
-    toogleUserMenu, loadInitializers, close_messages_window, messagesWin, send_chat_message, chat_message, open_friend_requests, open_chats, close_requests_win, friend_requests_win
+    toogleUserMenu, 
+    loadInitializers, 
+    close_messages_window, 
+    messagesWin, 
+    send_chat_message, 
+    chat_message, 
+    open_friend_requests, 
+    open_chats, 
+    close_requests_win, 
+    friend_requests_win, chatsList
 } from './variables.js';
 
 import {
@@ -78,12 +87,14 @@ import {
 } from './friends.js';
 
 import {
-    notications
+    _notifications
 } from './notifications.js';
+import { message } from './messages.js';
 
 $(() => {
     loadInitializers();
-    setTimeout(notications.check_notifications, 1000)
+    _notifications.check_notifications();
+    _notifications._requests();
 
     $(document).on("click", ".albumsFeed h5", e => {
         let count = $(e.target).parent().children("div").children("div").length;
@@ -405,7 +416,7 @@ $(() => {
     })
 
     $(open_notifications).on(click, () => {
-        notications._notifications()
+        _notifications._notifications()
     })
 
     $(close_notification).on(click, () => {
@@ -426,7 +437,7 @@ $(() => {
     })
 
     $(open_chats).on(click, () => {
-        $(messagesWin).fadeIn("slow");
+        friend.showFriendsList({open_chats_win: sessionStorage.getItem("logged_user")})
     })
 
     $(document).on(click, ".acceptFriendRequest", e => {
@@ -458,11 +469,24 @@ $(() => {
         alert($(e.target).data("request"))
     })
 
+    $(document).on(click, "#chat_users_list li", e => {
+        $(chatsList).empty()
+        sessionStorage.setItem("active", $(e.target).data("user"))
+        let loadMessages = {
+            user: sessionStorage.getItem("logged_user"),
+            load_messages: sessionStorage.getItem("active")
+        }
+
+        message.user_chat_messages(loadMessages)
+    })
+
     $(send_chat_message).on(click, () => {
         let new_message = {
-            user: sessionStorage.getItem("logged_user"),
+            sender: sessionStorage.getItem("logged_user"),
             message: $(chat_message).val(),
-            send_message_to: true
+            send_message_to: sessionStorage.getItem("active")
         }
+
+        message.send_message(new_message)
     })
 })
