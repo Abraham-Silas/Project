@@ -20,8 +20,8 @@
                         $pass = hashPassword($userObject->pass1);
                         $setLogin = $connection->query("INSERT INTO `login` (`username`, `password`, `user_id`) VALUES ('$userObject->mail', '$pass', '$user[user_id]')");
                         if($setLogin){
-                            $data["log_user"] = $userObject->mail;
-                            $data["log_pass"] = $userObject->pass1;
+                            $data["username"] = $userObject->mail;
+                            $data["password"] = $userObject->pass1;
                             login(json_decode(json_encode($data)));
                         }
                         else{
@@ -59,41 +59,36 @@
         return password_hash($textPassword, PASSWORD_BCRYPT, ["cost" => 12]);
     }
 
-    function login($loginObject)
+    function login($object)
     {
         global $connection;
-        $userLogin = $connection->query("SELECT * FROM `login` WHERE `username` = '$loginObject->log_user'");
+        $userLogin = $connection->query("SELECT * FROM `login` WHERE `username` = '$object->username'");
         if($userLogin->num_rows == 1)
         {
             $user = $userLogin->fetch_assoc();
-            if(password_verify($loginObject->log_pass, $user["password"]))
+            if(password_verify($object->password, $user["password"]))
             {
-                $_SESSION["logged_user"] = getUserDetails($user["username"]);
-                toogleLoginStatus($_SESSION["logged_user"]);
-                unset($_SESSION["logged"]);
-                redirectToHome();
+                $logged = getUserDetails($user["username"]);
+                toogleLoginStatus($logged);
+                echo $logged;
             }
-            else {
-                $_SESSION["logged"] = false;
-                redirectBackToIndex();
-            }
+            else
+                echo 0;
         }
-        else 
-        {
-            $_SESSION["logged"] = false;
-            redirectBackToIndex();
-        }
+        else
+            echo 0;
     }
 
     function toogleLoginStatus($user)
     {
         global $connection;
-        $log_status = $connection->query("SELECT * FROM `users` WHERE `user_id` = '$user'");
-        $info = $log_status->fetch_assoc();
-        if($info["status"] == "online")
-            $connection->query("UPDATE `users` SET `status` = 'offline' WHERE `user_id` = '$user'");
-        else
-            $connection->query("UPDATE `users` SET `status` = 'online' WHERE `user_id` = '$user'");
+        $connection->query("UPDATE `users` SET `status` = 'online' WHERE `user_id` = '$user'");            
+    }
+
+    function toogleLogoutStatus($user)
+    {
+        global $connection;
+        $connection->query("UPDATE `users` SET `status` = 'offline' WHERE `user_id` = '$user'");
     }
 
     function getUserDetails($userId)
@@ -146,33 +141,49 @@
         return $loadImages->num_rows;
     }
 
-    function globalActivity()
+    function globalActivity(){}
+
+    function activity($object)
     {
         global $connection;
-        $loadPosts = $connection->query("SELECT * FROM `posts`, `users` WHERE `users`.`user_id` = `posts`.`user` ORDER BY `posts`.`post_datetime` DESC");
-        while ($post =  $loadPosts->fetch_assoc())
+        if($object->post_type == "local")
+            $loadPosts = $connection->query("SELECT * FROM `posts`, `users`, `friends` WHERE `friends`.`user` = '$object->local_content' AND `users`.`user_id` = `posts`.`user` AND `friends`.`friend` = `posts`.`user` ORDER BY `posts`.`post_datetime` DESC");
+        else
+            $loadPosts = $connection->query("SELECT * FROM `posts`, `users` WHERE `users`.`user_id` = `posts`.`user` ORDER BY `posts`.`post_datetime` DESC");
+        
+        if($loadPosts->num_rows > 0)
         {
-            $dateDisplay = "";
-            $size = getImageCount($post["post_id"]);
-            $today = date("Y-m-d 00:00:00", time());
-            $yesterday = date("Y-m-d 00:00:00", time()-(60*60*24));
-            $postDate = strtotime($post["post_datetime"]);
-            $date = date("Y-m-d 00:00:00", $postDate);
-
-            if(new DateTime($today) == new DateTime($date))
-                $dateDisplay = "Today";
-            else if(new DateTime($yesterday) == new DateTime($date))
-                $dateDisplay = "Yesterday";
-            else
+            while ($post = $loadPosts->fetch_assoc())
             {
-                $month = monthSelection(date("m", $postDate));
-                $day = date("d", $postDate);
-                $dateDisplay = "$day-$month";
-            }
+                $dateDisplay = "";
+                $size = getImageCount($post["post_id"]);
+                $today = date("Y-m-d 00:00:00", time());
+                $yesterday = date("Y-m-d 00:00:00", time()-(60*60*24));
+                $postDate = strtotime($post["post_datetime"]);
+                $date = date("Y-m-d 00:00:00", $postDate);
 
-            $status = check_reaction("post", $post["post_id"]) == false ? "reacted" : "unreacted";
-            
-            displayPost($post["post_id"], $post["user_id"], $post["name"], $post["surname"], $dateDisplay, $post["profile"],$post["hashtags"], $post["description"], $size, $status); 
+                if(new DateTime($today) == new DateTime($date))
+                    $dateDisplay = "Today";
+                else if(new DateTime($yesterday) == new DateTime($date))
+                    $dateDisplay = "Yesterday";
+                else
+                {
+                    $month = monthSelection(date("m", $postDate));
+                    $day = date("d", $postDate);
+                    $dateDisplay = "$day-$month";
+                }
+
+                $status = check_reaction("post", $post["post_id"], $object->local_content) == false ? "reacted" : "unreacted";
+                
+                displayPost($post["post_id"], $post["user_id"], $post["name"], $post["surname"], $dateDisplay, $post["profile"],$post["hashtags"], $post["description"], $size, $status); 
+            }
+        }
+        else
+        {
+            echo '<h4 class="text-center p-1 mb-1 mt-0">You have no local posts yet...</h4>';
+            $data["local_content"] = $object->local_content;
+            $data["post_type"] = "global";
+            activity(json_decode(json_encode($data)));
         }
     }
 
@@ -281,17 +292,17 @@
         $title = $album->title;
         $description = $album->description;
         $date = date("Y-m-d", time());
-        $creator = $_SESSION["logged_user"];
+        $creator = $album->createalbum;
         $status = $album->privacy;
         $tags = $album->hashtag;
         
         if($insertAlbum->execute())
-            echo true;
+            echo 1;
         else
             echo $saveAlbum->error;
     }
 
-    function albums()
+    function global_albums()
     {
         global $connection;
         $loadAll = $connection->query("SELECT * FROM `albums`");
@@ -338,31 +349,31 @@
         }
     }
 
-    function invited($user)
+    function invited($user, $logged)
     {
         global $connection;
-        $invited = $connection->query("SELECT * FROM `requests` WHERE `user` = '$_SESSION[logged_user]' AND `requestee` = '$user'");
+        $invited = $connection->query("SELECT * FROM `requests` WHERE `user` = '$logged' AND `requestee` = '$user'");
         return ($invited->num_rows > 0) ? true : false; 
     }
 
-    function isFriend($user)
+    function isFriend($user, $logged)
     {
         global $connection;
         $notFriend = '<a class="list-group-item m-0 friendRequest" href="#" data-user="'.$user.'"><i class="fa fa-user-plus mr-1"></i>Send Request</a>';
         $friend = '<a class="list-group-item m-0 unfollowFriend" href="#" data-user="'.$user.'"><i class="fa fa-user-times mr-1"></i>Unfriend</a>';
         $cancelReq = '<a class="list-group-item m-0 cancelRequest" href="#" data-user="'.$user.'"><i class="fa fa-user-times mr-1"></i>Cancel Request</a>';
-        if(invited($user))
+        if(invited($user, $logged))
             return $cancelReq;
         else{
-            $verifyFriendship = $connection->query("SELECT * FROM `friends` WHERE `user` = '$_SESSION[logged_user]' AND `friend` = '$user'");
+            $verifyFriendship = $connection->query("SELECT * FROM `friends` WHERE `user` = '$logged' AND `friend` = '$user'");
             return $verifyFriendship->num_rows == 1 ? $friend : $notFriend;
         }
     }
 
-    function loadUsers()
+    function loadUsers($object)
     {
         global $connection;
-        $loadAll = $connection->query("SELECT * FROM `users` WHERE `user_id` <> '$_SESSION[logged_user]'");
+        $loadAll = $connection->query("SELECT * FROM `users` WHERE `user_id` <> '$object->global_users'");
         if($loadAll->num_rows > 0)
         {
             while($user = $loadAll->fetch_assoc())
@@ -376,7 +387,7 @@
                             <b><i class="fas fa-circle mr-1 '.$user["status"].'"></i>'.$user["status"].'</b>
                             <b class="fa fa-angle-down toogleUserMenu">
                                 <div class="p-1 userMenu">
-                                    '.isFriend($user["user_id"]).'
+                                    '.isFriend($user["user_id"], $object->global_users).'
                                     <a class="list-group-item m-0 hideUser" href="#"><i class="fa fa-user-slash mr-1"></i>Hide</a>
                                     <a class="list-group-item m-0 contactProfile" href="#" data-user="'.$user["user_id"].'"><i class="fa fa-user mr-1"></i>View Profile</a>
                                 </div>
@@ -407,16 +418,17 @@
         redirectToHome();
     }
 
-    function loadAlbumImages($album)
+    function loadAlbumImages($object)
     {
         global $connection;
         $imgs = array();
-        $photos = $connection->query("SELECT * FROM `shared_photos`,`users` WHERE `shared_photos`.`album` = '$album' AND `shared_photos`.`user` = `users`.`user_id`");
+        $photos = $connection->query("SELECT * FROM `shared_photos`,`users` WHERE `shared_photos`.`album` = '$object->viewAlbum' AND `shared_photos`.`user` = `users`.`user_id`");
         if($photos->num_rows > 0)
         {
             while($photo = $photos->fetch_assoc())
             {
                 $data["names"] = "$photo[name] $photo[surname]";
+                $data["photo"] = $photo["photo_id"];
                 $data["img"] = "data:image/*;base64,".base64_encode($photo["photo"]);
                 array_push($imgs, $data);
             }
@@ -475,19 +487,19 @@
         switch($object->type)
         {
             case "email":
-                $editInfo = $connection->query("UPDATE users SET email = '$object->editDetails' WHERE user_id = '$_SESSION[logged_user]'");
+                $editInfo = $connection->query("UPDATE `users` SET `email` = '$object->editDetails' WHERE `user_id` = '$object->user'");
                 break;
 
             case "bday":
-                $editInfo = $connection->query("UPDATE users SET birthday = '$object->editDetails' WHERE user_id = '$_SESSION[logged_user]'");
+                $editInfo = $connection->query("UPDATE `users` SET `birthday` = '$object->editDetails' WHERE `user_id` = '$object->user'");
                 break;
 
             case "names":
                 list($fname, $lname) = explode(" ", $object->editDetails);
                 if(strlen($lname) > 0)
-                    $editInfo = $connection->query("UPDATE users SET name = '$fname', surname = '$lname' WHERE user_id = '$_SESSION[logged_user]'");
+                    $editInfo = $connection->query("UPDATE `users` SET `name` = '$fname', `surname` = '$lname' WHERE `user_id` = '$object->user'");
                 else
-                    $editInfo = $connection->query("UPDATE users SET name = '$fname' WHERE user_id = '$_SESSION[logged_user]'");
+                    $editInfo = $connection->query("UPDATE `users` SET `name` = '$fname' WHERE `user_id` = '$object->user'");
                 break;
         }
     }
@@ -542,19 +554,19 @@
         echo json_encode($repliesArray);
     }
 
-    function check_reaction($type, $type_id)
+    function check_reaction($type, $type_id, $user = "2")
     {
         global $connection;
         switch($type)
         {
             case "comment":
-                $q = "SELECT * FROM `comment_reactions` WHERE `comment` = '$type_id' AND `user` = '$_SESSION[logged_user]'";
+                $q = "SELECT * FROM `comment_reactions` WHERE `comment` = '$type_id' AND `user` = '$user'";
                 break;
             case "reply":
-                $q = "SELECT * FROM `reply_reactions` WHERE `reply` = '$type_id' AND `user` = '$_SESSION[logged_user]'";
+                $q = "SELECT * FROM `reply_reactions` WHERE `reply` = '$type_id' AND `user` = '$user'";
                 break;
             case "post":
-                $q = "SELECT * FROM `post_reactions` WHERE `post` = '$type_id' AND `user` = '$_SESSION[logged_user]'";
+                $q = "SELECT * FROM `post_reactions` WHERE `post` = '$type_id' AND `user` = '$user'";
                 break;
         }
 
@@ -601,14 +613,14 @@
             $react = $connection->prepare("INSERT INTO `post_reactions` (`post`, `user`, `r_date`) VALUES (?, ?, ?)");
             $react->bind_param("iis", $post, $user, $rDate);
             $post = $object->react2post;
-            $user = $_SESSION["logged_user"];
+            $user = $object->user;
             $rDate = date("Y-m-d H:i:s", time());
             $react->execute();
             echo 1;
         }
         else
         {
-            $remove = $connection->query("DELETE FROM `post_reactions` WHERE `post` = '$object->react2post' AND `user` = '$_SESSION[logged_user]'");
+            $remove = $connection->query("DELETE FROM `post_reactions` WHERE `post` = '$object->react2post' AND `user` = '$object->user'");
             echo 0;
         }
     }
@@ -621,14 +633,14 @@
             $react = $connection->prepare("INSERT INTO `comment_reactions` (`comment`, `user`, `r_date`) VALUES (?, ?, ?)");
             $react->bind_param("iis", $comment, $user, $rDate);
             $comment = $object->react_to_comment;
-            $user = $_SESSION["logged_user"];
+            $user = $object->user;
             $rDate = date("Y-m-d H:i:s", time());
             $react->execute();
             echo 1;
         }
         else
         {
-            $remove = $connection->query("DELETE FROM `comment_reactions` WHERE `comment` = '$object->react_to_comment' AND `user` = '$_SESSION[logged_user]'");
+            $remove = $connection->query("DELETE FROM `comment_reactions` WHERE `comment` = '$object->react_to_comment' AND `user` = '$object->user'");
             echo 0;
         }
     }
@@ -640,14 +652,14 @@
             $react = $connection->prepare("INSERT INTO `reply_reactions` (`reply`, `user`, `r_date`) VALUES (?, ?, ?)");
             $react->bind_param("iis", $reply, $user, $rDate);
             $reply = $object->react_to_reply;
-            $user = $_SESSION["logged_user"];
+            $user = $object->user;
             $rDate = date("Y-m-d H:i:s", time());
             $react->execute();
             echo 1;
         }
         else
         {
-            $remove = $connection->query("DELETE FROM `reply_reactions` WHERE `reply` = '$object->react_to_reply' AND `user` = '$_SESSION[logged_user]'");
+            $remove = $connection->query("DELETE FROM `reply_reactions` WHERE `reply` = '$object->react_to_reply' AND `user` = '$object->user'");
             echo 0;
         }
     }
@@ -801,6 +813,16 @@
         echo $getRequests->num_rows;
     }
 
+    function sent_a_message($sender, $receiver)
+    {
+        global $connection;
+        $sent = $connection->query("SELECT * FROM `messages` WHERE `status` = 'unread' AND `receiver` = '$receiver' AND `sender` = '$sender'");
+        if($sent->num_rows > 0)
+            return true;
+        else
+            return false;
+    }
+
     function chatFriendList($object)
     {
         global $connection;
@@ -813,6 +835,10 @@
                 $data["user_id"] = $user["user_id"];
                 $data["user"] = "$user[name] $user[surname]";
                 $data["profile"] = "data:image/*;base64,".base64_encode($user["profile"]);
+                if(sent_a_message($user["user_id"], $object->open_chats_win))
+                    $data["sent"] = true;
+                else
+                    $data["sent"] = false;
                 array_push($list, $data);
             }
         }
@@ -867,5 +893,47 @@
         }
 
         echo json_encode($messages);
+    }
+
+    function checkNewMessages($object)
+    {
+        global $connection;
+        $check = $connection->query("SELECT * FROM `messages` WHERE `receiver` = '$object->new_chats' AND `status` = 'unread'");
+        echo $check->num_rows;
+    }
+
+    function markAsRead($msg)
+    {
+        global $connection;
+        $connection->query("UPDATE `messages` SET `status` = 'read' WHERE `msg_id` = '$msg'");
+    }
+
+    function newMessagesAwait($object)
+    {
+        global $connection;
+        $messages = array();
+        $new_message = $connection->query("SELECT * FROM `messages` WHERE `receiver` = '$object->user' AND `sender` = '$object->messages_from' AND `status` = 'unread'");
+        if($new_message->num_rows > 0)
+        {
+            while($message = $new_message->fetch_assoc())
+            {
+                $data["message"] = $message["message"];
+                $data["msg_date"] = $message["msg_date"];
+                array_push($messages, $data);
+                markAsRead($message["msg_id"]);
+            }
+        }
+
+        echo json_encode($messages);
+    }
+
+    function logged_user_profile($object)
+    {
+        global $connection;
+        $profile = $connection->query("SELECT * FROM `users` WHERE `user_id` = '$object->logged_user'");
+        $user = $profile->fetch_assoc();
+        $data["profile"] = "data:image/*;base64,".base64_encode($user["profile"]);
+        $data["logged"] = $user["user_id"];
+        echo json_encode($data);
     }
 ?>

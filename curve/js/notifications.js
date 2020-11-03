@@ -1,5 +1,5 @@
 import { requests } from "./server_requests.js"
-import { friend_requests_count, notifications, notifications_count, notification_list } from "./variables.js";
+import { chats_notification_count, friend_requests_count, notifications, notifications_count, notification_list } from "./variables.js";
 
 class Notification {
     _notifications = () => {
@@ -65,6 +65,13 @@ class Notification {
         requests.server_request({ load_requests: sessionStorage.getItem("logged_user") }).done(response => {
             $(friend_requests_count).text(response)
             setTimeout(this._requests, 1000)
+        })
+    }
+
+    _chat_messages = () => {
+        requests.server_request({ new_chats: sessionStorage.getItem("logged_user") }).done(response => {
+            $(chats_notification_count).text(parseInt(response));
+            setTimeout(this._chat_messages, 1000)
         })
     }
 }

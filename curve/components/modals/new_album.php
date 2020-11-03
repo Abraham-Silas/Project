@@ -1,7 +1,6 @@
-<div class="modal fade" id="newAlbum" tabindex="-1" role="dialog" aria-labelledby="newAlbum"
-    aria-hidden="true">
+<div class="modal fade" id="newAlbum" role="dialog" aria-labelledby="newAlbum" aria-hidden="true">
     <div class="modal-dialog">
-        <form method="POST" action="./php/router.php" id="createalbum">
+        <form method="POST" id="createalbum">
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 class="modal-title" id="newPost">Create New Album</h3>

@@ -1,5 +1,5 @@
 import { requests } from "./server_requests.js";
-import { chat_users_list, friend_requests_win, messagesWin, requests_list } from "./variables.js";
+import { chat_users_list, friend_requests_win, messagesWin, recent_chats, requests_list } from "./variables.js";
 
 class Friend {
     friendRequest = (user, e) => {
@@ -164,7 +164,16 @@ class Friend {
             html: object.user
         })
 
-        let binding = [profile, name]
+        let hasMessage = $("<i></i>", {
+            class: "fa fa-comment-dots mt-2 float-right"
+        })
+
+        let binding;
+
+        if(object.sent)
+            binding = [profile, name, hasMessage]
+        else
+            binding = [profile, name]
 
         let parent = $("<li></li>", {
             class: "list-group-item list-group-item-action"
@@ -175,19 +184,34 @@ class Friend {
         return parent;
     }
 
-    showFriendsList = object => {
-        requests.server_request(object).done(response => {
-            let friends = JSON.parse(response)
-            $(chat_users_list).empty()
-            if(friends.length > 0){
-                for(let friend of friends)
-                    $(chat_users_list).append(this.friendView(friend));
-            }
-            else{
-                $(chat_users_list).append(`<button class="btn btn-primary text-center">Start Chat</button>`);
-            }
-        }).then(() => {
+    showFriendsList = () => {
+        this.reloadUsers().then(() => {
             $(messagesWin).fadeIn("slow");
+        })
+    }
+
+    reloadUsers = () => {
+        return requests.server_request({open_chats_win: sessionStorage.getItem("logged_user")}).done(response => {
+                $(chat_users_list).empty()
+                let friends = JSON.parse(response)
+                
+                friends.sort((a, b) => {
+                    return b.sent - a.sent;
+                })
+
+                if(friends.length > 0)
+                {
+                    for(let friend of friends)
+                        $(chat_users_list).append(this.friendView(friend));
+                }
+                else
+                    $(chat_users_list).append(`<button class="btn btn-primary text-center">Start Chat</button>`);
+            })
+    }
+
+    global_users = () => {
+        requests.server_request({global_users: sessionStorage.getItem("logged_user")}).done(response => {
+            $(recent_chats).append(response)
         })
     }
 }

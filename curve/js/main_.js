@@ -1,21 +1,13 @@
-import {
-    createAlbum,
-    toggleView,
-    viewCompleteAlbum
-} from './albums.js';
-
-import {
-    showProfile,
-    editUserProfile
-} from './profile.js';
-
-import {
-    validate_description,
-    validate_titles,
-    validate_hashtag,
-    isEmpty
-} from './validations.js';
-
+import { albums } from './albums.js';
+import { profile } from './profile.js';
+import { empty } from './empty.js';
+import { comment } from './comments.js';
+import { post } from './post.js';
+import { friend } from './friends.js';
+import { _notifications } from './notifications.js';
+import { message } from './messages.js';
+import { validations } from './validations.js';
+import { user } from './user.js';
 import {
     albumTitle,
     albumDescription,
@@ -67,71 +59,85 @@ import {
     open_friend_requests, 
     open_chats, 
     close_requests_win, 
-    friend_requests_win, chatsList
+    friend_requests_win, 
+    chatsList, 
+    frmLogin, 
+    submit, 
+    log_user, 
+    log_pass, 
+    change, 
+    keyup
 } from './variables.js';
-
-import {
-    empty
-} from './empty.js';
-
-import {
-    comment
-} from './comments.js';
-
-import {
-    post
-} from './post.js';
-
-import {
-    friend
-} from './friends.js';
-
-import {
-    _notifications
-} from './notifications.js';
-import { message } from './messages.js';
 
 $(() => {
     loadInitializers();
     _notifications.check_notifications();
     _notifications._requests();
+    _notifications._chat_messages()
+    friend.global_users()
+    albums.global_albums()
+    profile.setLoggedUserProfile()
+    post.load_posts({ local_content: sessionStorage.getItem("logged_user"), post_type: "local" })
 
-    $(document).on("click", ".albumsFeed h5", e => {
-        let count = $(e.target).parent().children("div").children("div").length;
-        toggleView(e, count)
+    $(frmLogin).on(submit, e => {
+        e.preventDefault()
+
+        if(!validations.isEmpty(log_user.value) && !validations.isEmpty(log_pass.value))
+        {
+            let userLog = {
+                username: log_user.value,
+                password: log_pass.value,
+                login: true
+            }
+
+            user.login(userLog);
+        }
+        else
+        {
+            if(validations.isEmpty(log_user.value))
+                log_user.style.borderColor= "red";
+
+            if(validations.isEmpty(log_pass.value))
+                log_pass.style.borderColor= "red";
+        }
     })
 
-    $(document).on("click", ".scrollTo", e => {
+    $(document).on(click, ".albumsFeed h5", e => {
+        let count = $(e.target).parent().children("div").children("div").length;
+        albums.toggleView(e, count)
+    })
+
+    $(document).on(click, ".scrollTo", e => {
         e.preventDefault();
         comment_post_id.value = $(e.target).data("post");
         comment.view_post_comments({ viewComments: comment_post_id.value })
     })
 
-    $(document).on("click", "nav span:nth-child(3) div #switch_view label", e => {
+    $(document).on(click, "nav span:nth-child(3) div #switch_view label", e => {
         if (checked.checked) {
             $(e.target).css({
                 "background": "white",
                 "left": "0px"
             })
-
+            post.load_posts({ local_content: sessionStorage.getItem("logged_user"), post_type: "local" })
             status.innerHTML = "Local"
         } else {
             $(e.target).css({
                 "background": "gold",
                 "left": "23px"
             })
-
+            post.load_posts({ local_content: sessionStorage.getItem("logged_user"), post_type: "global" })
             status.innerHTML = "Global"
         }
     })
 
-    $(albumTitle).on("keyup", e => {
-        !isEmpty(e.target.value) ? validate_titles(e.target) ? e.target.style.borderColor = "green" : e.target.style.borderColor = "red" : e.target.style.borderColor = "lightgrey";
+    $(albumTitle).on(keyup, e => {
+        !validations.isEmpty(e.target.value) ? validations.validate_titles(e.target) ? e.target.style.borderColor = "green" : e.target.style.borderColor = "red" : e.target.style.borderColor = "lightgrey";
     })
 
-    $(albumDescription).on("keyup", e => {
-        if (!isEmpty(e.target.value))
-            if (validate_description(e.target))
+    $(albumDescription).on(keyup, e => {
+        if (!validations.isEmpty(e.target.value))
+            if (validations.validate_description(e.target))
                 e.target.style.borderColor = "green";
             else
                 e.target.style.borderColor = "red";
@@ -139,9 +145,9 @@ $(() => {
             e.target.style.borderColor = "lightgrey";
     })
 
-    $(albumTags).on("keyup", e => {
-        if (!isEmpty(e.target.value))
-            if (validate_hashtag(e.target))
+    $(albumTags).on(keyup, e => {
+        if (!validations.isEmpty(e.target.value))
+            if (validations.validate_hashtag(e.target))
                 e.target.style.borderColor = "green";
             else
                 e.target.style.borderColor = "red";
@@ -149,43 +155,43 @@ $(() => {
             e.target.style.borderColor = "lightgrey";
     })
 
-    $(document).on("submit", createalbum, e => {
+    $(createalbum).on(submit, e => {
         e.preventDefault()
-        if (!isEmpty(albumTitle.value) && !isEmpty(albumDescription.value) && !isEmpty(albumTags.value)) {
-            if (validate_titles(albumTitle) && validate_description(albumDescription) && validate_hashtag(albumTags)) {
+        if (!validations.isEmpty(albumTitle.value) && !validations.isEmpty(albumDescription.value) && !validations.isEmpty(albumTags.value)) {
+            if (validations.validate_titles(albumTitle) && validations.validate_description(albumDescription) && validations.validate_hashtag(albumTags)) {
                 if (albumPrivacy.value != "none") {
                     let newAlbum = {
                         title: albumTitle.value,
                         description: albumDescription.value,
                         hashtag: albumTags.value,
                         privacy: albumPrivacy.value,
-                        createalbum: true
+                        createalbum: sessionStorage.getItem("logged_user")
                     }
 
-                    createAlbum(newAlbum);
+                    albums.createAlbum(newAlbum);
                 } else
                     alert("Warning: specify album privacy")
             } else {
-                validate_titles(albumTitle);
-                validate_description(albumDescription);
+                validations.validate_titles(albumTitle);
+                validations.validate_description(albumDescription);
             }
         } else
             alert("Error: required fields empty");
     })
 
-    deleteAlbum.on('click', e => {
+    deleteAlbum.on(click, e => {
         alert($(e.target).data("album"))
     })
 
-    leaveAlbum.on('click', e => {
+    leaveAlbum.on(click, e => {
         alert($(e.target).data("album"))
     })
 
-    viewAlbum.on('click', e => {
-        viewCompleteAlbum($(e.target).data("album"))
+    $(document).on(click, viewAlbum, e => {
+        albums.viewCompleteAlbum($(e.target).data("album"))
     })
 
-    $(albumImages).on("change", e => {
+    $(albumImages).on(change, e => {
         let size = e.target.files.length;
         uploadedImages.empty();
         if (size > 0) {
@@ -201,15 +207,15 @@ $(() => {
             uploadedImages.append(empty.album_image_upload())
     })
 
-    $(addImages).on("click", () => {
+    $(addImages).on(click, () => {
         $(albumImages).click()
     })
 
-    $(profileHead).on("click", e => {
-        showProfile($(e.target).data("logged"));
+    $(profileHead).on(click, e => {
+        profile.showProfile($(e.target).data("logged"));
     })
 
-    saveOrEdit.on("click", e => {
+    saveOrEdit.on(click, e => {
         switch ($(e.target).data("state")) {
             case "edit":
                 $(e.target).parent().children("label").css("display", "none");
@@ -224,39 +230,40 @@ $(() => {
                 $(e.target).attr("class", "fa fa-pen float-right")
                 let editObject = {
                     type: $(e.target).data("type"),
-                    editDetails: $(e.target).parent().children("input").val()
+                    editDetails: $(e.target).parent().children("input").val(),
+                    user: sessionStorage.getItem("logged_user")
                 }
-                editUserProfile(editObject);
+                profile.editUserProfile(editObject);
                 break;
         }
     })
 
-    $(closeViewedAlbum).on("click", () => {
+    $(closeViewedAlbum).on(click, () => {
         $(".viewAlbum").fadeOut("slow");
         $(".al-images i").css("display", "none");
     })
 
-    $(closeProfileWindow).on("click", () => {
+    $(closeProfileWindow).on(click, () => {
         $(".userProfileWindow").fadeOut("slow");
     })
 
-    $(document).on("click", ".deleteImages", e => {
+    $(document).on(click, ".deleteImages", e => {
         $(".al-images i").css("display", "block");
         $(e.target).css("display", "none");
         $(".clearDelete").css("display", "block")
     })
 
-    $(document).on("click", ".al-images i", e => {
-        $(e.target).parent().fadeOut("slow");
+    $(document).on(click, ".al-images i", e => {
+        albums.deleteAlbumImage({delete_album_image: $(e.target).data("image")})
     })
 
-    $(document).on("click", ".clearDelete", e => {
+    $(document).on(click, ".clearDelete", e => {
         $(".al-images i").css("display", "none");
         $(e.target).css("display", "none");
         $(".deleteImages").css("display", "block")
     })
 
-    $(close_comments).on("click", () => {
+    $(close_comments).on(click, () => {
         $(comments_window).fadeOut();
         $(new_comment).fadeIn("fast")
         $(post_comments).css({
@@ -265,7 +272,7 @@ $(() => {
         $(post_comments).empty();
     });
 
-    $(send_comment).on("click", e => {
+    $(send_comment).on(click, e => {
         if (($(comment_text).val()).length > 0) 
         {
             let now = new Date();
@@ -315,24 +322,24 @@ $(() => {
             alert("Comment cannot be empty...");
     })
 
-    $(document).on("click", ".post_user", e => {
-        showProfile($(e.target).data("user"));
+    $(document).on(click, ".post_user", e => {
+        profile.showProfile($(e.target).data("user"));
     })
 
-    $(document).on("click", ".post_album", e => {
-        viewCompleteAlbum($(e.target).data("album"));
+    $(document).on(click, ".post_album", e => {
+        albums.viewCompleteAlbum($(e.target).data("album"));
     })
 
-    userMenu.on("click", e => {
-        showProfile($(e.target).data("user"))
+    userMenu.on(click, e => {
+        profile.showProfile($(e.target).data("user"))
     })
 
-    $(document).on("click", comment_on_post, e => {
+    $(document).on(click, comment_on_post, e => {
         comment_post_id.value = $(e.target).data("post");
         comment.view_post_comments({ viewComments: comment_post_id.value })
     })
 
-    $(new_comment).on("click", e => {
+    $(new_comment).on(click, e => {
         $(new_comment).fadeOut("fast")
         $(comment_controls).fadeIn("fast")
         $(post_comments).css({
@@ -340,17 +347,17 @@ $(() => {
         })
     });
 
-    $(document).on("click", ".comment_response b:nth-child(1)", e => {
+    $(document).on(click, ".comment_response b:nth-child(1)", e => {
         $(comment_post_id).val($(e.target).data("comment"));
         comment.view_comment_replies({ view_com_rep: comment_post_id.value });
     })
 
-    $(document).on("click", ".comment_response b:nth-child(2)", e => {
-        comment.react_to_comment({ react_to_comment: $(e.target).data("comment") }, e);
+    $(document).on(click, ".comment_response b:nth-child(2)", e => {
+        comment.react_to_comment({ react_to_comment: $(e.target).data("comment"), user: sessionStorage.getItem("logged_user") }, e);
     })
 
     $(document).on(click, ".reply_response b:nth-child(1)", e => {
-        comment.react_to_reply({ react_to_reply: $(e.target).data("reply") }, e);
+        comment.react_to_reply({ react_to_reply: $(e.target).data("reply"), user: sessionStorage.getItem("logged_user") }, e);
     })
 
     $(return_to_comments).on(click, e => {
@@ -368,11 +375,11 @@ $(() => {
     })
 
     $(document).on(click, ".comment span a", e => {
-        showProfile($(e.target).data("user"));
+        profile.showProfile($(e.target).data("user"));
     })
 
     $(document).on(click, ".post_reactions i:nth-child(1)", e => {
-        post.react_to_post({ react2post: $(e.target).data("post") }, e);
+        post.react_to_post({ react2post: $(e.target).data("post"), user: sessionStorage.getItem("logged_user") }, e);
     })
 
     $(document).on(click, toogleUserMenu, e => {
@@ -426,6 +433,7 @@ $(() => {
 
     $(close_messages_window).on(click, () => {
         $(messagesWin).fadeOut("slow")
+        sessionStorage.removeItem("active")
     })
 
     $(close_requests_win).on(click, () => {
@@ -437,7 +445,14 @@ $(() => {
     })
 
     $(open_chats).on(click, () => {
-        friend.showFriendsList({open_chats_win: sessionStorage.getItem("logged_user")})
+        friend.showFriendsList()
+        let times;
+        let reload = () => {
+            friend.reloadUsers();
+            return times = setTimeout(reload, 1000)
+        }
+
+        reload()
     })
 
     $(document).on(click, ".acceptFriendRequest", e => {
@@ -478,6 +493,7 @@ $(() => {
         }
 
         message.user_chat_messages(loadMessages)
+        message.await_new_messages();
     })
 
     $(send_chat_message).on(click, () => {

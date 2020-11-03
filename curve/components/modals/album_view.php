@@ -2,11 +2,11 @@
     <div class="albumDetails">
         <h4 class="p-3 m-0"><b class="fa fa-images float-left mr-2"></b>Album Title<i class="fa fa-times float-right" id="closeAlbumView"></i></h4>
         <div class="row m-0">
-            <div class="col-2 m-0 p-0 albumViewMenu">
+            <div class="col-3 m-0 p-0 albumViewMenu">
                 <h3 class="text-center mb-2 pt-2">Menu</h3>
                 <hr class="m-0 mb-1 p-0">
                 <button class="btn btn-default text-left form-control mb-1" type="button" data-toggle="modal" data-target="#uploadImages">Upload<i class="fa fa-upload float-right mr-1"></i></button>
-                <button class="btn btn-default text-left form-control mb-1" type="button">Invite<i class="fa fa-user-plus float-right"></i></button>
+                <button class="btn btn-default text-left form-control mb-1" type="button">Add Friends<i class="fa fa-user-plus float-right"></i></button>
                 <button class="btn btn-default text-left form-control mb-1 deleteImages" type="button">Delete<i class="fa fa-trash float-right mr-1"></i></button>
                 <button class="btn btn-default text-left form-control mb-1 clearDelete" type="button">Clear<i class="far fa-times-circle float-right mr-1"></i></button>
                 <button class="btn btn-default text-left form-control mb-1" type="button">Settings<i class="fa fa-cog float-right mr-1"></i></button>
@@ -14,18 +14,9 @@
                     <i class="fa fa-lock mr-1"></i><label>Private</label>
                 </div>
             </div>
-            <div class="col-7 m-0 al-images">
+            <div class="col m-0 al-images">
                 <div id="al-list">
                     <!-- Album Images Will Appear Here -->
-                </div>
-            </div>
-            <div class="col-3 m-0 p-0">
-                <div class="w-100 comments">
-                    <h5 class="text-center">Be the first to comments...</h5>
-                </div>
-                <div class="userComment">
-                    <textarea placeholder="Type your comment here..." row="1" class="form-control"></textarea>
-                    <button class="btn btn-dark btn-sm rounded" type="button">Send</button>
                 </div>
             </div>
         </div>

@@ -30,14 +30,7 @@
                 </i>
             </span>
             <span>
-                <?php
-                    $profile = $connection->query("SELECT * FROM `users` WHERE `user_id` = '$_SESSION[logged_user]'");
-                    $user = $profile->fetch_assoc();
-                    $img = "data:image/*;base64,".base64_encode($user["profile"]);
-                    $info = "$user[name] $user[surname]";
-                    echo "<img src='$img' data-logged='$_SESSION[logged_user]' class='rounded-circle' id='profileHead'/>";
-                    echo "<input type='hidden' data-logged='$_SESSION[logged_user]' data-user='$info' id='userHiddenInfo'/>";
-                ?>
+                <img src="./images/profile/default.jpg" alt="user profile image" class="rounded-circle" id="profileHead">
             </span>
         </div>
     </span>

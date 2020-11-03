@@ -4,12 +4,6 @@
         include_once './php/config.php';
         include_once './php/server.php';
         include_once './components/head/head.php';
-        if(!isset($_SESSION["logged_user"]))
-            redirectBackToIndex();
-        if(isset($_SESSION["uploaded"]))
-            unset($_SESSION["uploaded"]);
-        // Session Setting
-        echo "<script> sessionStorage.setItem('logged_user', $_SESSION[logged_user]); </script>";
     ?>
     <body>
         <div class="fluid-container">
@@ -20,20 +14,20 @@
                         <b class="fa fa-users mr-1"></b> 
                         <i class="fa fa-search float-right"></i>
                     </h4>
-                    <div class="recent_chats">
-                        <?php loadUsers(); ?>
+                    <div class="recent_chats" id="recent_chats">
+                        <!-- Users List will appear here -->
                     </div>
                 </div>
                 <div id="posts">
-                    <?php globalActivity(); ?>
+                    <!-- Posts will appear here -->
                 </div>
                 <div id="albums">
                     <h4>
                         <b class="fas fa-album mr-1 ml-1"></b> 
                         <b class="btn btn-dark btn-sm float-right" data-toggle="modal" data-target="#newAlbum"><b>New</b></b>
                     </h4>
-                    <div class="albumsFeed">
-                        <?php albums(); ?>
+                    <div class="albumsFeed" id="album_feed">
+                        <!-- Albums will appear here -->
                     </div>
                 </div>
             </div>

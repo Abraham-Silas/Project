@@ -37,10 +37,10 @@
                         <img src="./curve/images/logo/curve1.png">
                     </span>
                     <span>
-                        <form method="POST" enctype="multipart/form-data" action="./curve/php/router.php">
-                            <input class="form-control" type="email" name="log_user" placeholder="Username">
-                            <input class="form-control" type="password" name="log_pass" placeholder="Password">
-                            <button class="btn btn-danger btn-sm" name="login">Login</button>
+                        <form method="POST" enctype="multipart/form-data" action="./curve/php/router.php" id="frmLogin">
+                            <input id="log_user" class="form-control" type="email" name="log_user" placeholder="Username">
+                            <input id="log_pass" class="form-control" type="password" name="log_pass" placeholder="Password">
+                            <button class="btn btn-danger btn-sm" type="submit" name="login">Login</button>
                         </form>
                     </span>
                 </div>
@@ -91,5 +91,6 @@
                 </div>
             </div>
         </div>
+        <script type="module" src="./curve/js/main_.js"></script>
     </body>
 </html>

@@ -25,7 +25,7 @@
             break;
 
         case isset($_POST["viewAlbum"]):
-            loadAlbumImages($_POST["viewAlbum"]);
+            loadAlbumImages(json_decode(json_encode($_POST)));
             break;
 
         case isset($_POST["viewUserProfile"]):
@@ -107,7 +107,31 @@
         case isset($_POST["load_messages"]):
             loadChatMessages(json_decode(json_encode($_POST)));
             break;
+
+        case isset($_POST["local_content"]):
+            activity(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["new_chats"]):
+            checkNewMessages(json_decode(json_encode($_POST)));
+            break;
     
+        case isset($_POST["messages_from"]):
+            newMessagesAwait(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["global_users"]):
+            loadUsers(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["global_album"]):
+            global_albums(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["logged_user"]):
+            logged_user_profile(json_decode(json_encode($_POST)));
+            break;
+
         default:
             redirectBackToIndex();
             break;
