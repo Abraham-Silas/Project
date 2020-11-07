@@ -78,13 +78,13 @@ class Friend {
 
         if(object.type == "album")
         {
-            type_description = `sent you a request to join their album <a href="#">album name</a>`
+            type_description = `sent you a request to join their album <a href="#" data-album="${object.album_id}">${object.album}</a>`
             btnAcceptType = `acceptAlbumRequest`
             btnRejectType = `rejectAlbumRequest`
         }
         else
         {
-            type_description = `sent you an invitation to join their album <a href="#">album name</a>`
+            type_description = `sent you an invitation to join their album <a href="#" data-album="${object.album_id}">${object.album}</a>`
             btnAcceptType = `acceptInvitationRequest`
             btnRejectType = `rejectInvitationRequest`
         }

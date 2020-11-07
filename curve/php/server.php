@@ -322,12 +322,7 @@
                                 </div><br>
                                 <a href="#">'.$album["album_hashtag"].'</a>
                             </span>
-                            <span>
-                                <img src="./images/display/img13.jpg" class="rounded-circle">
-                                <img src="./images/display/img17.jpg" class="rounded-circle">
-                                <img src="./images/display/img18.jpg" class="rounded-circle">
-                                <label><a href="">+ 5 others</a> shared images on this album</label>
-                            </span>
+ 
                         </h5>
                         <div class="albumImages">
                             <div>
@@ -416,6 +411,20 @@
             uploadImages($img, $album);
         }
         redirectToHome();
+    }
+
+    function album_info($object)
+    {
+        global $connection;
+        $info = $connection->query("SELECT * FROM `albums`, `users` WHERE `albums`.`album_id` = `users`.`user_id` AND `albums`.`album_id` = '$object->viewAlbumInfo'");
+        $album = $info->fetch_assoc();
+        $data["album_name"] = $album["album_name"];
+        $data["description"] = $album["album_description"];
+        $data["created"] = $album["date_created"];
+        $data["status"] = $album["album_status"];
+        $data["creator"] = "$album[name] $album[surname]";
+        $data["admin"] = $album["creator"];
+        echo json_encode($data);
     }
 
     function loadAlbumImages($object)
@@ -765,6 +774,14 @@
         {
             while($req = $request->fetch_assoc())
             {
+                $checkAlbum = $connection->query("SELECT * FROM `requested_albums`, `albums` WHERE `requested_albums`.`request` = '$req[request_id]' AND `requested_albums`.`album` = `albums`.`album_id`");
+                if($checkAlbum->num_rows > 0)
+                {
+                    $album = $checkAlbum->fetch_assoc();
+                    $data["album_id"] = $album["album_id"];
+                    $data["album"] = $album["album_name"];
+                }
+
                 $data["id"] = $req["request_id"];
                 $data["user"] = "$req[name] $req[surname]";
                 $data["profile"] = "data:image/*;base64,".base64_encode($req["profile"]);
@@ -935,5 +952,118 @@
         $data["profile"] = "data:image/*;base64,".base64_encode($user["profile"]);
         $data["logged"] = $user["user_id"];
         echo json_encode($data);
+    }
+
+    function share_photos($object)
+    {
+        global $connection;
+        $img = addslashes(base64_decode($object->upload_shared_photos));
+        $upload = $connection->query("INSERT INTO `shared_photos` (`album`, `user`, `photo`) VALUES ('$object->album', '$object->user', '$img')");
+        if($upload)
+            echo 1;
+        else
+            echo 0;
+    }
+
+    function delete_image($object)
+    {
+        global $connection;
+        $delete = $connection->query("DELETE FROM `shared_photos` WHERE `photo_id` = '$object->delete_album_image'");
+        if($delete)
+            echo 1;
+        else
+            echo 0;
+    }
+
+    function invite_friends($object)
+    {
+        global $connection;
+        $invites = array();
+        $friends = $connection->query("SELECT * FROM `users`, `friends` WHERE `friends`.`user` = '$object->user' AND `users`.`user_id` = `friends`.`friend`");
+        if($friends->num_rows > 0)
+        {
+            while($user = $friends->fetch_assoc())
+            {
+                $checkFriendship = $connection->query("SELECT * FROM `album_connections` WHERE `owner` = '$object->user' AND `album` = '$object->invite_friends' AND `connectedTo` = '$user[user_id]'");
+                if($checkFriendship->num_rows == 0)
+                {
+                    $checkReq = $connection->query("SELECT * FROM `requests` WHERE `user` = '$object->user' AND `requestee` = '$user[user_id]' AND `request_type` = 'invite'");
+                    if($checkReq->num_rows > 0)
+                    {
+                        $stat = $checkReq->fetch_assoc();
+                        $data["status"] = $stat["request_id"];
+                    }
+                    else
+                        $data["status"] = 0;
+
+                    $data["user"] = $user["user_id"];
+                    $data["names"] = "$user[name] $user[surname]";
+                    $data["profile"] = "data:image/*;base64,".base64_encode($user["profile"]);
+                    array_push($invites, $data);
+                }
+            }
+        }
+
+        echo json_encode($invites);
+    }
+
+    function send_invitation($object)
+    {
+        global $connection;
+        $send = $connection->prepare("INSERT INTO `requests` (`user`, `requestee`, `request_type`) VALUES (?, ?, ?)");
+        $send->bind_param("iis", $user, $req, $type);
+        $user = $object->user;
+        $req = $object->invitation;
+        $type = "invite";
+        if($send->execute())
+        {
+            $request = $connection->query("SELECT MAX(`request_id`) FROM `requests` WHERE `user` = '$object->user' AND `requestee` = '$object->invitation'");
+            $req = $request->fetch_assoc();
+            $reqID = $req["MAX(`request_id`)"];
+            if($connection->query("INSERT INTO `requested_albums` (`album`, `request`) VALUES ('$object->album', '$reqID')"))
+                echo $reqID;
+            else
+                echo 0;
+        }
+    }
+
+    function cancel_invitation($object)
+    {
+        global $connection;
+        if($connection->query("DELETE FROM `requested_albums` WHERE `request` = '$object->cancel_invitation'")){
+            if($connection->query("DELETE FROM `requests` WHERE `request_id` = '$object->cancel_invitation'"))
+                echo 1;
+            else
+                echo 0;
+        }
+        else
+            echo 0;
+    }
+
+    function accept_invitation($object)
+    {
+        global $connection;
+        $details = $connection->query("SELECT * FROM `requests`, `requested_albums` WHERE `requests`.`request_id` = `requested_albums`.`request` AND `requests`.`request_id` = '$object->accept_invitation'");
+        $req = $details->fetch_assoc();
+
+        $accept = $connection->prepare("INSERT INTO `album_connections` (`owner`, `connectedTo`, `album`) VALUES (?, ?, ?)");
+        $accept->bind_param("iii", $user, $con, $album);
+        $user = $req["user"];
+        $con = $req["requestee"];
+        $album = $req["album"];
+        if($accept->execute())
+        {
+            $data["cancel_invitation"] = $req["request_id"];
+            cancel_invitation(json_decode(json_encode($data)));
+        }
+        else
+            echo 0;
+    }
+
+    function reject_invitation($object)
+    {
+        global $connection;
+        $data["cancel_invitation"] = $object->reject_invitation;
+        cancel_invitation(json_decode(json_encode($data)));
     }
 ?>

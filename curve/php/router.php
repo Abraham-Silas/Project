@@ -28,6 +28,10 @@
             loadAlbumImages(json_decode(json_encode($_POST)));
             break;
 
+        case isset($_POST["viewAlbumInfo"]):
+            album_info(json_decode(json_encode($_POST)));
+            break;
+
         case isset($_POST["viewUserProfile"]):
             showUserProfile($_POST["viewUserProfile"]);
             break;
@@ -132,6 +136,34 @@
             logged_user_profile(json_decode(json_encode($_POST)));
             break;
 
+        case isset($_POST["upload_shared_photos"]):
+            share_photos(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["delete_album_image"]):
+            delete_image(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["invite_friends"]):
+            invite_friends(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["invitation"]):
+            send_invitation(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["cancel_invitation"]):
+            cancel_invitation(json_decode(json_encode($_POST)));
+            break;
+            
+        case isset($_POST["accept_invitation"]):
+            accept_invitation(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["reject_invitation"]):
+            reject_invitation(json_decode(json_encode($_POST)));
+            break;
+                        
         default:
             redirectBackToIndex();
             break;

@@ -21,7 +21,6 @@ import {
     viewAlbum,
     albumImages,
     addImages,
-    uploadedImages,
     profileHead,
     saveOrEdit,
     closeViewedAlbum,
@@ -66,7 +65,7 @@ import {
     log_user, 
     log_pass, 
     change, 
-    keyup
+    keyup, preview, dropzone, browse, close_album_upload_win, uploadImages, albumUpload, chooseFiles, addFriendsToAlbum, albumInvite, close_friend_invite, clearImageDelete, deleteAlbumImage, fast, slow
 } from './variables.js';
 
 $(() => {
@@ -188,23 +187,8 @@ $(() => {
     })
 
     $(document).on(click, viewAlbum, e => {
-        albums.viewCompleteAlbum($(e.target).data("album"))
-    })
-
-    $(albumImages).on(change, e => {
-        let size = e.target.files.length;
-        uploadedImages.empty();
-        if (size > 0) {
-            for (let i = 0; i < size; i++) {
-                let img_src = URL.createObjectURL(e.target.files[i])
-                uploadedImages.append($("<img>", {
-                    src: img_src
-                }))
-            }
-
-            $(addImages).fadeIn("slow")
-        } else
-            uploadedImages.append(empty.album_image_upload())
+        sessionStorage.setItem("album", $(e.target).data("album"))
+        albums.viewCompleteAlbum(sessionStorage.getItem("album"))
     })
 
     $(addImages).on(click, () => {
@@ -239,12 +223,15 @@ $(() => {
     })
 
     $(closeViewedAlbum).on(click, () => {
-        $(".viewAlbum").fadeOut("slow");
-        $(".al-images i").css("display", "none");
+        $(".viewAlbum").fadeOut(slow);
+        $(clearImageDelete).fadeOut(slow)
+        $(deleteAlbumImage).fadeIn(slow)
+        $(".al-images i").fadeOut(slow)
+        sessionStorage.removeItem("album")
     })
 
     $(closeProfileWindow).on(click, () => {
-        $(".userProfileWindow").fadeOut("slow");
+        $(".userProfileWindow").fadeOut(slow);
     })
 
     $(document).on(click, ".deleteImages", e => {
@@ -477,11 +464,15 @@ $(() => {
     })
 
     $(document).on(click, ".acceptInvitationRequest", e => {
-        alert($(e.target).data("request"))
+        albums.accept_invitation({
+            accept_invitation: $(e.target).data("request")
+        })
     })
 
     $(document).on(click, ".rejectInvitationRequest", e => {
-        alert($(e.target).data("request"))
+        albums.reject_invitation({
+            reject_invitation: $(e.target).data("request")
+        })
     })
 
     $(document).on(click, "#chat_users_list li", e => {
@@ -496,6 +487,10 @@ $(() => {
         message.await_new_messages();
     })
 
+    $(document).on(click, "#al-list i", e => {
+        albums.deleteAlbumImage({delete_album_image: $(e.target).data("image")}, e);
+    })
+
     $(send_chat_message).on(click, () => {
         let new_message = {
             sender: sessionStorage.getItem("logged_user"),
@@ -504,5 +499,65 @@ $(() => {
         }
 
         message.send_message(new_message)
+    })
+
+    dropzone.addEventListener('drop', e => {
+        e.preventDefault()
+        e.stopPropagation();
+        albums.loadAndUploadImages(e.dataTransfer.files)
+    })
+
+    dropzone.addEventListener("dragover", e => {
+        e.stopPropagation();
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+    })
+
+    $(chooseFiles).on("change", e => {
+        if(e.target.files.length > 0)
+            albums.loadAndUploadImages(e.target.files)
+    })
+
+    $(browse).on(click, e => {
+        e.preventDefault()
+        $(chooseFiles).click()
+    })
+
+    $(albumUpload).on(click, () => {
+        $(uploadImages).fadeIn("slow")
+    })
+
+    $(close_album_upload_win).on(click, () => {
+        $(uploadImages).fadeOut("slow")
+        $(preview).empty()
+        albums.album_images({viewAlbum: sessionStorage.getItem("album")})
+    })
+
+    $(addFriendsToAlbum).on(click, () => {
+        albums.inviteFriends()
+    })
+
+    $(close_friend_invite).on(click, () => {
+        $(albumInvite).fadeOut("slow")
+    })
+
+    $(document).on(click, ".friendToInvite a", e => {
+        e.preventDefault()
+        profile.showProfile($(e.target).data("user"));
+    })
+
+    $(document).on(click, ".friendToInvite button", e => {
+        if(parseInt($(e.target).data("cancel")) == 0)
+            albums.send_invitation({
+                invitation: $(e.target).data("user"),
+                user: sessionStorage.getItem("logged_user"),
+                album: sessionStorage.getItem("album")
+            }, e)
+        else
+        {
+            albums.cancel_invitation({
+                cancel_invitation: $(e.target).data("cancel")
+            }, e)
+        }
     })
 })
