@@ -22,9 +22,11 @@
                     <!-- Posts will appear here -->
                 </div>
                 <div id="albums">
-                    <h4>
-                        <b class="fas fa-album mr-1 ml-1"></b> 
-                        <b class="btn btn-dark btn-sm float-right" data-toggle="modal" data-target="#newAlbum"><b>New</b></b>
+                    <h4 class="row m-0">
+                        <b class="btn btn-success btn-sm col" id="localAlbums"><span class="fa fa-people-arrows mr-1"></span><span class="label">Local</span></b> 
+                        <b class="btn btn-primary btn-sm col" id="globalAlbum"><span class="fa fa-globe mr-1"></span><span class="label">Global</span></b> 
+                        <b class="btn btn-danger btn-sm col" data-toggle="modal" data-target="#newAlbum"><span class="fa fa-plus mr-1"></span><span class="label">New</span></b>
+                        <b class="btn btn-warning btn-sm col-1"><span class="fa fa-search"></span></b>
                     </h4>
                     <div class="albumsFeed" id="album_feed">
                         <!-- Albums will appear here -->

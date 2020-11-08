@@ -132,6 +132,10 @@
             global_albums(json_decode(json_encode($_POST)));
             break;
 
+        case isset($_POST["local_album"]):
+            local_albums(json_decode(json_encode($_POST)));
+            break;
+
         case isset($_POST["logged_user"]):
             logged_user_profile(json_decode(json_encode($_POST)));
             break;

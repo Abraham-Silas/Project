@@ -65,7 +65,7 @@ import {
     log_user, 
     log_pass, 
     change, 
-    keyup, preview, dropzone, browse, close_album_upload_win, uploadImages, albumUpload, chooseFiles, addFriendsToAlbum, albumInvite, close_friend_invite, clearImageDelete, deleteAlbumImage, fast, slow
+    keyup, preview, dropzone, browse, close_album_upload_win, uploadImages, albumUpload, chooseFiles, addFriendsToAlbum, albumInvite, close_friend_invite, clearImageDelete, deleteAlbumImage, fast, slow, mouseover, localAlbums, globalAlbum
 } from './variables.js';
 
 $(() => {
@@ -74,7 +74,7 @@ $(() => {
     _notifications._requests();
     _notifications._chat_messages()
     friend.global_users()
-    albums.global_albums()
+    albums.local_albums()
     profile.setLoggedUserProfile()
     post.load_posts({ local_content: sessionStorage.getItem("logged_user"), post_type: "local" })
 
@@ -176,19 +176,6 @@ $(() => {
             }
         } else
             alert("Error: required fields empty");
-    })
-
-    deleteAlbum.on(click, e => {
-        alert($(e.target).data("album"))
-    })
-
-    leaveAlbum.on(click, e => {
-        alert($(e.target).data("album"))
-    })
-
-    $(document).on(click, viewAlbum, e => {
-        sessionStorage.setItem("album", $(e.target).data("album"))
-        albums.viewCompleteAlbum(sessionStorage.getItem("album"))
     })
 
     $(addImages).on(click, () => {
@@ -559,5 +546,25 @@ $(() => {
                 cancel_invitation: $(e.target).data("cancel")
             }, e)
         }
+    })
+
+    $(document).on(click, ".view_album", e => {
+        sessionStorage.setItem("album", $(e.target).data("album"))
+        albums.viewCompleteAlbum({
+            viewAlbumInfo: sessionStorage.getItem("album"),
+            user: sessionStorage.getItem("logged_user")
+        })
+    })
+
+    $(document).on(mouseover, ".view_album", e => {
+        $(e.target).tooltip()
+    })
+
+    $(localAlbums).on(click, () => {
+        albums.local_albums()
+    })
+
+    $(globalAlbum).on(click, () => {
+        albums.global_albums()
     })
 })

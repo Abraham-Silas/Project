@@ -113,6 +113,8 @@ export let deleteAlbumImage = document.getElementById('deleteAlbumImage')
 export let albumHeader = document.getElementById('albumHeader')
 export let album_privacy = document.getElementById('album_privacy')
 export let clearImageDelete = document.getElementById('clearImageDelete')
+export let localAlbums = document.getElementById('localAlbums')
+export let globalAlbum = document.getElementById('globalAlbum')
 // Media Tones
 export let newMSG = new Audio("./tones/msg.mp3")
 // on Events
@@ -122,3 +124,4 @@ export let change = "change"
 export let keyup = "keyup"
 export let fast = "fast"
 export let slow = "slow"
+export let mouseover = "mouseover"

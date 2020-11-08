@@ -7,6 +7,7 @@ import{
     albumFriendsList,
     albumHeader,
     albumInvite,
+    albumUpload,
     album_feed,
     album_id,
     album_list,
@@ -36,12 +37,14 @@ class Albums{
         {
             case "closed":
                 $(object.target).data("status", "open")
-                if(count > 0 && count < 4)
+                if(count == 0)
+                    height = count;
+                else if(count > 0 && count < 4)
                     height = 102;
                 else if(count > 3 && count < 7)
-                    height = 205;
+                    height = 202;
                 else
-                    height = 304;
+                    height = 303;
                 $($(object.target).parent().children("div")).css("height", `${height}px`);
                 break;
 
@@ -52,19 +55,26 @@ class Albums{
         }
     }
 
-    viewCompleteAlbum = album => {
-        $(album_id).attr("value", album);
-        requests.server_request({viewAlbumInfo: album}).done(response => {
+    viewCompleteAlbum = object => {
+        requests.server_request(object).done(response => {
             let info = JSON.parse(response);
-            if(parseInt(info.admin) != parseInt(sessionStorage.getItem("logged_user")))
-            {
-                $(addFriendsToAlbum).css("display", "none")
-                $(deleteAlbumImage).css("display", "none")
-            }
-            else
+            if(info.viewer == "admin")
             {
                 $(addFriendsToAlbum).css("display", "block")
                 $(deleteAlbumImage).css("display", "block")
+                $(albumUpload).css("display", "block")
+            }
+            else if(info.viewer == "contributor")
+            {
+                $(addFriendsToAlbum).css("display", "none")
+                $(deleteAlbumImage).css("display", "none")
+                $(albumUpload).css("display", "block")
+            }
+            else
+            {
+                $(addFriendsToAlbum).css("display", "none")
+                $(deleteAlbumImage).css("display", "none")
+                $(albumUpload).css("display", "none")
             }
 
             $(albumHeader).text(info.album_name)
@@ -83,7 +93,7 @@ class Albums{
             }
 
         }).then(() => {
-            this.album_images({viewAlbum: album})
+            this.album_images({viewAlbum: object.viewAlbumInfo})
         })
     }
 
@@ -119,7 +129,15 @@ class Albums{
     }
 
     global_albums = () => {
+        $(album_feed).empty()
         requests.server_request({global_album: true}).done(response => {
+            $(album_feed).append(response)
+        })
+    }
+
+    local_albums = () => {
+        $(album_feed).empty()
+        requests.server_request({local_album: sessionStorage.getItem("logged_user")}).done(response => {
             $(album_feed).append(response)
         })
     }

@@ -523,7 +523,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     background-color: goldenrod;
     font-weight: lighter;
     font-size: 20pt;
-    padding: 4px;
+    padding: 0px;
     margin: 0;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
@@ -534,6 +534,14 @@ nav span:nth-child(3) div #switch_view label:hover {
     padding: 4px;
     padding-left: 5px;
     padding-right: 5px;
+}
+
+#albums h4 b{
+    width: 100%;
+    font-size: 13pt;
+    border-radius: 0;
+    margin: 0px;
+    padding: 5px;
 }
 
 #albums h5:hover {
@@ -570,12 +578,12 @@ nav span:nth-child(3) div #switch_view label:hover {
 }
 
 .albumsFeed div span:nth-child(1) i:hover {
-    background-color: white;
-    color: black;
+    cursor: pointer;
 }
 
 .albumsFeed div span:nth-child(2) {
     display: block;
+    font-size: 10pt;
 }
 
 .albumsFeed div span:nth-child(2) img {
@@ -584,6 +592,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     height: 25px;
     left: 0;
     border: 2px solid white;
+    object-fit: cover;
 }
 
 .albumsFeed div span:nth-child(2) img:nth-child(2) {
@@ -604,6 +613,10 @@ nav span:nth-child(3) div #switch_view label:hover {
 
 .albumsFeed i {
     pointer-events: none;
+}
+
+.view_album{
+    font-size: 12pt;
 }
 
 #albums h4 i:hover {
@@ -643,6 +656,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     height: 100%;
     padding: 0;
     margin: 0;
+    object-fit: cover;
 }
 
 .albumsFeed div .albumImages i {

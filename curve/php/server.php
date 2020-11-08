@@ -305,43 +305,79 @@
     function global_albums()
     {
         global $connection;
-        $loadAll = $connection->query("SELECT * FROM `albums`");
+        $loadAll = $connection->query("SELECT * FROM `albums`, `users` WHERE `albums`.`creator` = `users`.`user_id` AND `albums`.`album_status` <> 'private'");
         if($loadAll->num_rows > 0)
         {
-            while($album = $loadAll->fetch_assoc())
-            {
-                echo '<div>
-                        <h5 class="m-0 p-1 pl-2" data-status="closed">
-                            <span class="dropdown w-100" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <b class="w-100">'.$album["album_name"].'</b>
-                                <i class="fa fa-angle-down float-right mr-1 dropdown-toggle" data-toggle="dropdown"></i>
-                                <div class="dropdown-menu dropdown-menu-right" id="albumMenu">
-                                    <a class="dropdown-item m-0 albumViewDetails" href="#" data-album="'.$album["album_id"].'"><i class="fa fa-binoculars mr-1"></i>View Album</a>
-                                    <a class="dropdown-item m-0 albumDelete" href="#" data-album="'.$album["album_id"].'"><i class="fa fa-trash mr-1"></i>Delete</a>
-                                    <a class="dropdown-item m-0 albumExit" href="#" data-album="'.$album["album_id"].'"><i class="fa fa-sign-out-alt mr-1"></i>Leave</a>
-                                </div><br>
-                                <a href="#">'.$album["album_hashtag"].'</a>
-                            </span>
- 
-                        </h5>
-                        <div class="albumImages">
-                            <div>
-                                <img src="./images/display/img13.jpg">
-                            </div>
-                            <div>
-                                <img src="./images/display/img17.jpg">
-                            </div>
-                            <div>
-                                <img src="./images/display/img6.jpg">
-                            </div>
-                        </div>
-                    </div>';
+            while($album = $loadAll->fetch_assoc()){
+                display_album($album["album_id"], $album["album_name"], $album["album_hashtag"], $album["user_id"], $album["name"]);
             }
         }
         else
         {
             echo "<h5 class='text-center'>You have no albums yet...<h5>";
         }
+    }
+
+    function local_albums($object)
+    {
+        global $connection;
+        $loadAll = $connection->query("SELECT * FROM `albums`, `users`, `friends` WHERE `albums`.`creator` = `users`.`user_id` AND `friends`.`friend` = `albums`.`creator` AND `friends`.`user` = '$object->local_album'");
+        if($loadAll->num_rows > 0)
+        {
+            while($album = $loadAll->fetch_assoc()){
+                display_album($album["album_id"], $album["album_name"], $album["album_hashtag"], $album["user_id"], $album["name"]);
+            }
+        }
+        else{
+            echo "<h5 class='text-center'>You have no albums yet...<h5>";
+        }
+    }
+
+    function display_album($aID, $album, $hash, $userID, $username)
+    {
+        echo '<div>
+                <h5 class="m-0 p-1 pl-2" data-status="closed">
+                    <span class="w-100">
+                        <b class="w-100">'.$album.'</b>
+                        <i class="fa fa-angle-down float-right mr-1 "></i>
+                        <i data-album="'.$aID.'" class="far fa-eye float-right mr-2 view_album" data-toggle="tooltip" data-placement="bottom" title="View"></i>
+                        <br>
+                        <a href="#">'.$hash.'</a>
+                    </span>
+                    <span>
+                        <b><i class="fas fa-user-tie"></i> <a href="" data-user="'.$userID.'">'.$username.'</a></b>
+                        <b class="float-right"><i class="fa fa-share-alt-square"></i> '.getContributors($aID).' Contributors</b>
+                    </span>
+                </h5>
+                <div class="albumImages">
+                    '.sharedPhotos($aID).'
+                </div>
+            </div>';
+    }
+
+    function getContributors($album)
+    {
+        global $connection;
+        $contr = $connection->query("SELECT * FROM `album_connections` WHERE `album` = '$album'");
+        return $contr->num_rows;
+    }
+
+    function sharedPhotos($album)
+    {
+        global $connection;
+        $imgs = $connection->query("SELECT * FROM `shared_photos` WHERE `album` = '$album' LIMIT 9" );
+        $photos = "";
+        if($imgs->num_rows > 0)
+        {
+            while($photo = $imgs->fetch_assoc())
+            {
+                $photos .= "<div>
+                            <img src='data:image/*;base64,".base64_encode($photo["photo"])."'>
+                        </div>";
+            }
+        }
+
+        return $photos;
     }
 
     function invited($user, $logged)
@@ -423,8 +459,23 @@
         $data["created"] = $album["date_created"];
         $data["status"] = $album["album_status"];
         $data["creator"] = "$album[name] $album[surname]";
-        $data["admin"] = $album["creator"];
+        if($object->user == $album["creator"])
+            $data["viewer"] = "admin";
+        else
+        {
+            if(isContributor($album["album_id"], $object->user))
+                $data["viewer"] = "contributor";
+            else
+                $data["viewer"] = "visitor";
+        }
         echo json_encode($data);
+    }
+
+    function isContributor($album, $user)
+    {
+        global $connection;
+        $isContrib = $connection->query("SELECT * FROM `album_connections` WHERE `album` = '$album' AND `connectedTo` = '$user'");
+        return $isContrib->num_rows == 1 ? true : false;
     }
 
     function loadAlbumImages($object)
