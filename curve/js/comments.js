@@ -24,7 +24,7 @@ class Comments
                         "height" : "100vh"
                     })
                 }
-                alert("Remember to add the link to your comment in the case you want to reply to your own comment!!")
+                // alert("Remember to add the link to your comment in the case you want to reply to your own comment!!")
             })
         });
 
@@ -44,7 +44,7 @@ class Comments
 
         _reply.then(data => {
             requests.server_request(data).done(response => {
-                alert("Remember to add the link to your reply in the case you want to react to your own reply!!")
+                // alert("Remember to add the link to your reply in the case you want to react to your own reply!!")
             })
         });
 

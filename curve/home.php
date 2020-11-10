@@ -11,8 +11,14 @@
             <div class="row m-0 postContent">
                 <div id="messages">
                     <h4 class="text-left">
-                        <b class="fa fa-users mr-1"></b> 
-                        <i class="fa fa-search float-right"></i>
+                        <span id="usersListHeader">
+                            <b class="fa fa-users mr-1"></b> 
+                            <i class="fa fa-search float-right" id="find_a_user"></i>
+                        </span>
+                        <span id="FindUser">
+                            <i class="fa fa-arrow-left" id="close_user_search"></i>
+                            <input type="text" id="begin_find_user_search" class="form-control" placeholder="Find a user"/>
+                        </span>
                     </h4>
                     <div class="recent_chats" id="recent_chats">
                         <!-- Users List will appear here -->
@@ -44,6 +50,7 @@
             include_once './components/chats/messages.php';
             include_once './components/notifications/notification.php';  
             include_once './components/requests/requests.php';  
+            include_once './components/report/report.php';  
         ?>
         <script type="module" src="./js/main_.js"></script>
     </body>

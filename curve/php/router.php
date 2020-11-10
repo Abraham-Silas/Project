@@ -12,8 +12,8 @@
             createNewAccount(json_decode(json_encode($_POST)));
             break;
 
-        case isset($_FILES["file"]):
-            createNewPost(json_decode(json_encode($_POST)), $_FILES["file"]["tmp_name"]);
+        case isset($_POST["createpost"]):
+            createNewPost(json_decode(json_encode($_POST)), $_FILES["files"]["tmp_name"]);
             break;
 
         case isset($_POST["createalbum"]):
@@ -33,11 +33,11 @@
             break;
 
         case isset($_POST["viewUserProfile"]):
-            showUserProfile($_POST["viewUserProfile"]);
+            showUserProfile(json_decode(json_encode($_POST)));
             break;
 
         case isset($_POST["loadUserPosts"]):
-            userPosts($_POST["loadUserPosts"]);
+            userPosts(json_decode(json_encode($_POST)));
             break;
 
         case isset($_POST["editDetails"]):
@@ -78,6 +78,10 @@
         
         case isset($_POST["unfollow_friend"]):
             unfollowFriend(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["unfollow"]):
+            unfollow_user(json_decode(json_encode($_POST)));
             break;
 
         case isset($_POST["cancel_friend_request"]):
@@ -167,7 +171,55 @@
         case isset($_POST["reject_invitation"]):
             reject_invitation(json_decode(json_encode($_POST)));
             break;
-                        
+
+        case isset($_POST["selected_post_images"]):
+            post_images_load(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["change_profile"]):
+            change_profile_image(json_decode(json_encode($_POST)));
+            break;
+                  
+        case isset($_POST["follow"]):
+            follow_user(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["view_user_albums"]):
+            user_albums(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["view_user_friends"]):
+            user_friends(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["view_user_followers"]):
+            user_followers(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["view_user_followings"]):
+            user_followings(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["delete_user_post"]):
+            delete_post(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["search_post"]):
+            post_search(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["find_a_user"]):
+            user_search(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["get_report_reasons"]):
+            report_reasons(json_decode(json_encode($_POST)));
+            break;
+
+        case isset($_POST["report_post"]):
+            report_post(json_decode(json_encode($_POST)));
+            break;
+            
         default:
             redirectBackToIndex();
             break;

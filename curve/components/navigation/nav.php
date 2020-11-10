@@ -1,9 +1,9 @@
 <nav class="navbar">
     <span class="col-4 p-0">
-        <img src="./images/logo/curve__.png">
+        <img id="logo" src="./images/logo/curve__.png">
     </span>
     <span class="col-4 p-0">
-        <input type="search" class="form-control" name="findPost" placeholder="Search for a post...">
+        <input type="search" class="form-control" id="searchForPost" name="findPost" placeholder="Search for a post...">
         <i class="fa fa-search postSearch"></i>
     </span>
     <span class="col-4 p-0">

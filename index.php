@@ -48,7 +48,7 @@
 
                 </div>
                 <div class="col-4 p-0" id="registerFrm">
-                    <form method="POST" class="card" enctype="multipart/form-data" action="./curve/php/router.php">
+                    <form method="POST" class="card" id="createNewAccount" enctype="multipart/form-data" action="./curve/php/router.php">
                         <div class="card-header">
                             <h3 class="text-center" class='text-center'>Create a Free Account</h3>
                         </div>

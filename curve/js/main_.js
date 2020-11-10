@@ -16,9 +16,6 @@ import {
     checked,
     status,
     createalbum,
-    deleteAlbum,
-    leaveAlbum,
-    viewAlbum,
     albumImages,
     addImages,
     profileHead,
@@ -65,7 +62,57 @@ import {
     log_user, 
     log_pass, 
     change, 
-    keyup, preview, dropzone, browse, close_album_upload_win, uploadImages, albumUpload, chooseFiles, addFriendsToAlbum, albumInvite, close_friend_invite, clearImageDelete, deleteAlbumImage, fast, slow, mouseover, localAlbums, globalAlbum
+    keyup, 
+    preview, 
+    dropzone, 
+    browse, 
+    close_album_upload_win, 
+    uploadImages, 
+    albumUpload, 
+    chooseFiles, 
+    addFriendsToAlbum, 
+    albumInvite, 
+    close_friend_invite, 
+    clearImageDelete, 
+    deleteAlbumImage, 
+    slow, 
+    mouseover, 
+    localAlbums, 
+    globalAlbum, 
+    post_images_files, 
+    approved, 
+    post_image_preview, 
+    close_post_window, 
+    newPost, 
+    post_text, 
+    createPost, 
+    logged_u, 
+    hashtag, 
+    more_post_images, 
+    select_post_image, 
+    selected_post_image_preview, 
+    close_image_preview, 
+    profileImage, 
+    changeProfile, 
+    followUser, 
+    unfollowUser, 
+    view_user_posts,
+    view_user_albums,
+    view_user_friends, 
+    view_user_followers,
+    view_user_followings,
+    user_post_delete,
+    preview_container,
+    searchForPost,
+    close_user_search,
+    FindUser,
+    fast,
+    usersListHeader,
+    find_a_user,
+    begin_find_user_search,
+    close_report_win,
+    report_win,
+    logout
 } from './variables.js';
 
 $(() => {
@@ -101,7 +148,24 @@ $(() => {
         }
     })
 
-    $(document).on(click, ".albumsFeed h5", e => {
+    $("#createNewAccount").on(submit, e => {
+        e.preventDefault();
+        let account = {
+            name: $("#fname").val(),
+            surname: $("#lname").val(),
+            email: $("#mail").val(),
+            birthday: $("#bday").val(),
+            pass1: $("#pass1").val(),
+            pass2: $("#pass1").val(),
+            register: true
+        }
+
+        if($("#pass1").val() == $("#pass2").val())
+            user.create_new_account(account);
+
+    })
+
+    $(document).on(click, ".albumsFeed h5, .currentUserPosts h5", e => {
         let count = $(e.target).parent().children("div").children("div").length;
         albums.toggleView(e, count)
     })
@@ -199,9 +263,19 @@ $(() => {
                 $(e.target).parent().children("input").css("display", "none");
                 $(e.target).data("state", "edit")
                 $(e.target).attr("class", "fa fa-pen float-right")
+                let details;
+                if($(e.target).data("type") == "names")
+                    details = {
+                        name: $("#editName").val(),
+                        surname: $("#editSurname").val()
+                    }
+                else{
+                    details = $(e.target).parent().children("input").val()
+                }
+
                 let editObject = {
                     type: $(e.target).data("type"),
-                    editDetails: $(e.target).parent().children("input").val(),
+                    editDetails: details,
                     user: sessionStorage.getItem("logged_user")
                 }
                 profile.editUserProfile(editObject);
@@ -255,8 +329,8 @@ $(() => {
                 let comObject = {
                     user: {
                         id: $(profileHead).data("logged"),
-                        name: $(userHiddenInfo).data("user").split(" ")[0],
-                        surname: $(userHiddenInfo).data("user").split(" ")[1],
+                        name: sessionStorage.getItem("name"),
+                        surname: sessionStorage.getItem("surname"),
                         profile: $(profileHead).attr('src')
                     },
                     post_id: $(comment_post_id).val(),
@@ -275,8 +349,8 @@ $(() => {
                 let reply = {
                     user: {
                         id: $(profileHead).data("logged"),
-                        name: $(userHiddenInfo).data("user").split(" ")[0],
-                        surname: $(userHiddenInfo).data("user").split(" ")[1],
+                        name: sessionStorage.getItem("name"),
+                        surname: sessionStorage.getItem("surname"),
                         profile: $(profileHead).attr('src')
                     },
                     rep_id: $(comment_post_id).val(),
@@ -304,7 +378,7 @@ $(() => {
         albums.viewCompleteAlbum($(e.target).data("album"));
     })
 
-    userMenu.on(click, e => {
+    $(document).on(click, userMenu, e => {
         profile.showProfile($(e.target).data("user"))
     })
 
@@ -361,8 +435,21 @@ $(() => {
         $(e.target).children(".userMenu").toggle("slow")
     })
 
+    $(`body:not(${toogleUserMenu})`).on(click, () => {
+        $(".userMenu").fadeOut("fast")
+    })
+
     $(document).on(click, friendRequest, e => {
         e.preventDefault()
+        let newFriendReq = {
+            new_friend_request: $(e.target).data("user"),
+            user: sessionStorage.getItem("logged_user")
+        }
+
+        friend.friendRequest(newFriendReq, e)
+    })
+
+    $(document).on(click, ".post .friendRequest", e => {
         let newFriendReq = {
             new_friend_request: $(e.target).data("user"),
             user: sessionStorage.getItem("logged_user")
@@ -381,6 +468,24 @@ $(() => {
         friend.unfollowFriend(unfollowFriend, e);
     })
 
+    $(document).on(click, followUser, e => {
+        let follow = {
+            follow: $(e.target).data("user"),
+            user: sessionStorage.getItem("logged_user")
+        }
+
+        user.follow_user(follow, e)
+    })
+
+    $(document).on(click, unfollowUser, e => {
+        let unfollow = {
+            unfollow: $(e.target).data("user"),
+            user: sessionStorage.getItem("logged_user")
+        }
+
+        user.unfollow_user(unfollow, e)
+    })
+
     $(document).on(click, cancelRequest, e => {
         e.preventDefault()
         let cancelReq = {
@@ -391,7 +496,7 @@ $(() => {
         friend.cancelFriendRequest(cancelReq, e)
     })
 
-    $(hideuser).on(click, e => {
+    $(document).on(click, hideuser, e => {
         e.preventDefault()
         $(e.target).parent().parent().parent().parent().fadeOut("slow");
     })
@@ -500,7 +605,27 @@ $(() => {
         e.dataTransfer.dropEffect = 'copy';
     })
 
-    $(chooseFiles).on("change", e => {
+    profileImage.addEventListener("dragover", e => {
+        e.stopPropagation();
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+    })
+
+    profileImage.addEventListener('drop', e => {
+        e.preventDefault()
+        e.stopPropagation();
+        if(parseInt(sessionStorage.getItem("userType")) == 0)
+            profile.change_user_profile(e.dataTransfer.files)
+    })
+
+    $(changeProfile).on(change, e => {
+        let file = e.target.files
+
+        if(file.length == 1)
+            profile.change_user_profile(e.target.files)
+    })
+
+    $(chooseFiles).on(change, e => {
         if(e.target.files.length > 0)
             albums.loadAndUploadImages(e.target.files)
     })
@@ -566,5 +691,157 @@ $(() => {
 
     $(globalAlbum).on(click, () => {
         albums.global_albums()
+    })
+
+    $(post_images_files).on(change, e => {
+        let files = e.target.files;
+        $(post_image_preview).empty()
+        $(post_image_preview).css("border-top", "none")
+
+        if(files.length > 0)
+        {
+            $(post_image_preview).css("border-top", "1px solid lightgrey")
+            for(let file of files)
+            {
+                if(approved.includes(file.type))
+                {
+                    let reader = new FileReader()
+                    reader.onload = e => {
+                        let img = $("<img/>", {
+                            src: e.target.result
+                        })
+
+                        img.hide().fadeIn(slow)
+
+                        $(post_image_preview).append(img)
+                    }
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+    })
+
+    $(close_post_window).on(click, e => {
+        $(newPost).fadeOut(slow)
+        $(post_image_preview).empty()
+        $(post_image_preview).css("border-top", "none")
+        $(post_text).val("")
+        $(hashtag).val("")
+    })
+
+    $(createPost).on(click, () => {
+        $(newPost).fadeIn(slow)
+        $(logged_u).val(sessionStorage.getItem("logged_user"))
+    })
+
+    $(document).on(click, more_post_images, e => {
+        post.load_post_images({selected_post_images: $(e.target).data("post")})
+    })
+
+    $(document).on(click, select_post_image, e => {
+        let src = $(selected_post_image_preview).attr("src")
+        $(selected_post_image_preview).attr("src", $(e.target).attr("src"))
+        $(e.target).attr("src", src)
+    })
+
+    $(close_image_preview).on(click, () => {
+        $(post_images_win).fadeOut("slow")
+        $(preview_container).empty()
+    })
+
+    $(view_user_posts).on(click, e => {
+        profile.view_user_posts({loadUserPosts: sessionStorage.getItem("viewedProfile")})
+    })
+
+    $(view_user_albums).on(click, e => {
+        profile.view_user_albums({view_user_albums: sessionStorage.getItem("viewedProfile")})
+    })
+
+    $(view_user_friends).on(click, () => {
+        profile.view_user_friends({view_user_friends: sessionStorage.getItem("viewedProfile")})
+    })
+
+    $(view_user_followers).on(click, () => {
+        profile.view_user_followers({view_user_followers: sessionStorage.getItem("viewedProfile")})
+    })
+
+    $(view_user_followings).on(click, () => {
+        profile.view_user_followings({view_user_followings: sessionStorage.getItem("viewedProfile")})
+    })
+
+    $(document).on(click, user_post_delete, e => {
+        post.delete_post({delete_user_post: $(e.target).data("post")})
+    })
+
+    $(searchForPost).on(keyup, e => {
+        let search = {
+            search_post: $(e.target).val(),
+            user: sessionStorage.getItem("logged_user")
+        }
+
+        if(search.search_post.length > 0)
+            post.search_post(search)
+        else
+            post.load_posts({ local_content: sessionStorage.getItem("logged_user"), post_type: "local" })
+    })
+
+    $(close_user_search).on(click, () => {
+        $(FindUser).css("display", "none")
+        $(usersListHeader).fadeIn()
+        friend.global_users()
+    })
+
+    $(find_a_user).on(click, () => {
+        $(usersListHeader).css("display", "none")
+        $(FindUser).css("display", "inline-flex")
+    })
+
+    $(begin_find_user_search).on(keyup, e => {
+        let search = {
+            find_a_user: $(e.target).val(),
+            user: sessionStorage.getItem("logged_user")
+        }
+
+        if(search.find_a_user.length > 0)
+            user.search_user(search)
+        else
+            friend.global_users()
+    })
+
+    $(document).on(click, ".post .reportPost", e => {
+        sessionStorage.setItem("report_post", $(e.target).data("post"))
+        post.report_reasons()
+    })
+
+    $(close_report_win).on(click, () => {
+        $(report_win).fadeOut()
+    })
+
+    $(document).on(click, "#reasons li", e => {
+        let report = {
+            reporter: sessionStorage.getItem("logged_user"),
+            report_post: sessionStorage.getItem("report_post"),
+            reason: $(e.target).data("reason")
+        }
+
+        post.report_post(report)
+    })
+
+    $(document).on(click, ".postHashTag", e => {
+        e.preventDefault()
+        $(searchForPost).val($(e.target).text())
+        let search = {
+            search_post: $(e.target).text(),
+            user: sessionStorage.getItem("logged_user")
+        }
+        post.search_post(search)
+    })
+
+    $(logout).on(click, () => {
+        sessionStorage.removeItem("logged_user")
+        sessionStorage.removeItem("name")
+        sessionStorage.removeItem("surname")
+        sessionStorage.removeItem("album")
+        window.location.href = `${window.location.origin}/IMY220/u15231748/`;
     })
 })

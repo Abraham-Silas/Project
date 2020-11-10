@@ -210,6 +210,7 @@ class Friend {
     }
 
     global_users = () => {
+        $(recent_chats).empty()
         requests.server_request({global_users: sessionStorage.getItem("logged_user")}).done(response => {
             $(recent_chats).append(response)
         })

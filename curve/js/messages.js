@@ -1,4 +1,4 @@
-import { chatsList, chat_message, newMSG } from "./variables.js";
+import { chatsList, chat_message } from "./variables.js";
 import { requests } from "./server_requests.js";
 
 class Message{
@@ -59,7 +59,6 @@ class Message{
             let messages = JSON.parse(response);
             if(messages.length > 0)
             {
-                newMSG.play()
                 for(let message of messages)
                 {                    
                     let currectHeight = $(chatsList).scrollTop() + $(chatsList).innerHeight()

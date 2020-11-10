@@ -9,9 +9,10 @@ import{
     albumInvite,
     albumUpload,
     album_feed,
-    album_id,
     album_list,
     album_privacy,
+    approved,
+    currentUserPosts,
     deleteAlbumImage,
     newAlbum,
     preview
@@ -179,7 +180,6 @@ class Albums{
     }
 
     loadAndUploadImages = files => {
-        let approved = ["image/jpg", "image/jpeg", "image/png", "image/bmp", "image/gif"]
         $(preview).empty()
         for(let file of files)
         {

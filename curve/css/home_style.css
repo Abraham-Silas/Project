@@ -335,6 +335,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     top: 15px;
     right: 15px;
     font-size: 16pt;
+    display: inline-flex;
 }
 
 .post span:nth-child(1) span:nth-child(3) i:hover {
@@ -363,15 +364,8 @@ nav span:nth-child(3) div #switch_view label:hover {
     position: relative;
     width: 100%;
     display: flex;
-    overflow-x: auto;
-    overflow-y: hidden;
     padding: 0;
     margin: 0;
-}
-
-.post span:nth-child(2) div:nth-child(3)::-webkit-scrollbar {
-    display: block;
-    height: 5px;
 }
 
 .post span:nth-child(2) div:nth-child(2) span {
@@ -396,7 +390,28 @@ nav span:nth-child(3) div #switch_view label:hover {
     position: relative;
     width: 100%;
     height: 400px;
+    z-index: 0;
     pointer-events: none;
+}
+
+.more_post_images{
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    z-index: 999;
+    color: black;
+    font-size: 17pt;
+    padding: 7px;
+    margin-right: 10px;
+    border-radius: 10px;
+    opacity: .5;
+    background-color: rgb(255, 255, 255);
+    transition: opacity .5s;
+}
+
+.more_post_images:hover{
+    cursor: pointer;
+    opacity: 1;
 }
 
 .post span:nth-child(2) div:nth-child(4) {
@@ -437,11 +452,12 @@ nav span:nth-child(3) div #switch_view label:hover {
     height: 33px;
 }
 
-.post span:nth-child(3) label {
+.post span:nth-child(3) label{
     position: relative;
     font-weight: bold;
     font-size: 13pt;
-    left: -26px;
+    top: 1px;
+    left: -25px;
 }
 
 .post span:nth-child(3) img:nth-child(2) {
@@ -499,20 +515,30 @@ nav span:nth-child(3) div #switch_view label:hover {
     box-shadow: none;
 }
 
-.modal-footer input {
+.post_footer{
+    padding: 8px;
+}
+
+.post_footer button{
+    position: relative;
+    top: -4px;
+}
+
+.post_footer input {
     position: absolute;
     visibility: hidden;
     z-index: 0;
     left: 0;
 }
 
-.modal-footer label {
+.post_footer label {
     position: absolute;
     left: 10px;
-    font-size: 17pt;
+    font-size: 20pt;
+    margin-top: 4px;
 }
 
-.modal-footer label:hover {
+.post_footer label:hover {
     cursor: pointer;
 }
 
@@ -544,31 +570,42 @@ nav span:nth-child(3) div #switch_view label:hover {
     padding: 5px;
 }
 
-#albums h5:hover {
+#albums h5:hover,
+.currentUserPosts h5:hover {
     cursor: pointer;
     background: black;
     color: white;
 }
 
-.albumsFeed div {
+.currentUserPosts h5{
+    background: black;
+    color: white;
+}
+
+.albumsFeed div,
+.currentUserPosts div {
     position: relative;
     margin: 3px;
     background-color: white;
 }
 
-.albumsFeed div h5 a {
+.albumsFeed div h5 a,
+.currentUserPosts div h5 a {
     font-size: 11pt;
 }
 
-.albumsFeed div h5 div b {
+.albumsFeed div h5 div b,
+.currentUserPosts div h5 div b:not(.post b) {
     font-weight: bold;
 }
 
-.albumsFeed div span:nth-child(1) b {
+.albumsFeed div span:nth-child(1) b,
+.currentUserPosts div span:nth-child(1) b:not(.post b) {
     font-weight: lighter;
 }
 
-.albumsFeed div span:nth-child(1) i {
+.albumsFeed div span:nth-child(1) i,
+.currentUserPosts div span:nth-child(1) i:not(.post i) {
     width: 23px;
     height: 23px;
     border-radius: 50%;
@@ -577,16 +614,19 @@ nav span:nth-child(3) div #switch_view label:hover {
     pointer-events: all;
 }
 
-.albumsFeed div span:nth-child(1) i:hover {
+.albumsFeed div span:nth-child(1) i:hover,
+.currentUserPosts div span:nth-child(1) i:hover {
     cursor: pointer;
 }
 
-.albumsFeed div span:nth-child(2) {
+.albumsFeed div span:nth-child(2),
+.currentUserPosts div span:nth-child(2) {
     display: block;
     font-size: 10pt;
 }
 
-.albumsFeed div span:nth-child(2) img {
+.albumsFeed div span:nth-child(2) img,
+.currentUserPosts div span:nth-child(2) img {
     position: relative;
     width: 25px;
     height: 25px;
@@ -595,28 +635,28 @@ nav span:nth-child(3) div #switch_view label:hover {
     object-fit: cover;
 }
 
-.albumsFeed div span:nth-child(2) img:nth-child(2) {
+.albumsFeed div span:nth-child(2) img:nth-child(2),
+.currentUserPosts div span:nth-child(2) img:nth-child(2) {
     position: relative;
     left: -11px;
 }
 
-.albumsFeed div span:nth-child(2) img:nth-child(3) {
+.albumsFeed div span:nth-child(2) img:nth-child(3),
+.currentUserPosts div span:nth-child(2) img:nth-child(3) {
     position: relative;
     left: -22px;
 }
 
-.albumsFeed div span:nth-child(2) label {
+.albumsFeed div span:nth-child(2) label,
+.currentUserPosts div span:nth-child(2) label:not(.post label) {
     position: relative;
     font-size: 11pt;
     left: -25px;
 }
 
-.albumsFeed i {
-    pointer-events: none;
-}
-
 .view_album{
     font-size: 12pt;
+    pointer-events: all;
 }
 
 #albums h4 i:hover {
@@ -626,7 +666,8 @@ nav span:nth-child(3) div #switch_view label:hover {
     color: white;
 }
 
-.albumsFeed div .albumImages {
+.albumsFeed div .albumImages,
+.currentUserPosts div .albumImages {
     position: relative;
     padding: 0;
     margin: 0;
@@ -640,7 +681,8 @@ nav span:nth-child(3) div #switch_view label:hover {
     scroll-behavior: smooth;
 }
 
-.albumsFeed div .albumImages div {
+.albumsFeed div .albumImages div,
+.currentUserPosts div .albumImages div {
     position: relative;
     width: 33%;
     height: 100px;
@@ -650,7 +692,8 @@ nav span:nth-child(3) div #switch_view label:hover {
     margin-top: 1px;
 }
 
-.albumsFeed div .albumImages img {
+.albumsFeed div .albumImages img,
+.currentUserPosts div .albumImages img {
     position: relative;
     width: 100%;
     height: 100%;
@@ -659,7 +702,8 @@ nav span:nth-child(3) div #switch_view label:hover {
     object-fit: cover;
 }
 
-.albumsFeed div .albumImages i {
+.albumsFeed div .albumImages i,
+.currentUserPosts div .albumImages i {
     position: absolute;
     bottom: 4px;
     left: 4px;
@@ -670,12 +714,14 @@ nav span:nth-child(3) div #switch_view label:hover {
     pointer-events: all;
 }
 
-.albumsFeed div .albumImages i:hover {
+.albumsFeed div .albumImages i:hover,
+.currentUserPosts div .albumImages i:hover {
     color: red;
     cursor: pointer;
 }
 
-.albumsFeed div .albumImages i:nth-child(2) {
+.albumsFeed div .albumImages i:nth-child(2),
+.currentUserPosts div .albumImages i:nth-child(2) {
     left: 30px;
 }
 
@@ -686,14 +732,15 @@ nav span:nth-child(3) div #switch_view label:hover {
 .viewAlbum, 
 #notifications, 
 #messagesWin,
-#friend_requests_win {
+#friend_requests_win,
+#report_win {
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     z-index: 999;
-    background-color: rgba(0, 0, 0, .7);
+    background-color: rgba(0, 0, 0, .9);
     display: none;
 }
 
@@ -868,13 +915,15 @@ nav span:nth-child(3) div #switch_view label:hover {
 }
 
 #uploadImages,
-#albumInvite{
+#albumInvite,
+#newPost,
+#post_images_win{
     position: fixed;
     width: 100%;
     height: 100%;
     top: 0;
     left: 0;
-    z-index: 9999;
+    z-index: 99999;
     background: rgba(0, 0, 0, .9);
     display: none;
 }
@@ -1005,7 +1054,7 @@ nav span:nth-child(3) div #switch_view label:hover {
     height: 100%;
     left: 0;
     top: 0;
-    background: rgba(0, 0, 0, .7);
+    background: rgba(0, 0, 0, .9);
     display: none;
 }
 
@@ -1061,14 +1110,6 @@ nav span:nth-child(3) div #switch_view label:hover {
     overflow-y: auto;
     overflow-x: hidden;
     border-radius: 0px 5px 2px 0px;
-}
-
-.profileDetails .posts h4 {
-    position: sticky;
-    width: 100%;
-    top: 0;
-    z-index: 999;
-    background: gray;
 }
 
 .profileDetails .posts h4 i {
@@ -1236,9 +1277,8 @@ nav span:nth-child(3) div #switch_view label:hover {
 }
 
 #post_comments {
-    height: 100vh;
+    height: 80vh;
     overflow-y: auto;
-    overflow-x: hidden;
 }
 
 #post_comments #no_comments i, #no_replies i {
@@ -1552,7 +1592,6 @@ nav span:nth-child(3) div #switch_view label:hover {
     height: 89%;
     overflow-y: auto;
     display: inline-block;
-    /* background-color: grey; */
     border-radius: 0px 0px 5px 5px;
 }
 
@@ -1583,4 +1622,224 @@ nav span:nth-child(3) div #switch_view label:hover {
 
 #albumInvite{
     display: none;
+}
+
+#post_content{
+    position: relative;
+    width: 50%;
+    height: 62%;
+    top: 7%;
+    left: 25%;
+    right: 25%;
+    border-radius: 5px 5px 5px 5px;
+    background-color: rgb(255, 255, 255);
+}
+
+#post_content textarea{
+    border-radius: 0;
+    box-shadow: none;
+    outline: none;
+    border: none;
+    color: rgba(0, 0, 0, 1);
+    font-size: 13pt;
+}
+
+#post_content textarea::placeholder{
+    color: rgba(0, 0, 0, 1);
+    font-size: 13pt;
+}
+
+#hashtag{ 
+    border: 0;
+    color:  rgb(255, 255, 255);
+    font-size: 13pt;
+    border-radius: 0;
+    background-color: rgba(0, 10, 90, 1);
+}
+
+#hashtag::placeholder{
+    color: rgb(255, 255, 255);
+}
+
+#hashtag:focus{
+    -webkit-appearance: none;
+    outline: none;
+    box-shadow: none;
+}
+
+#post_image_preview{
+    position: relative;
+    top: 1px;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 0px 0px 5px 5px;
+    overflow-x: auto;
+    border-top: none;
+    display: inline-flex;
+}
+
+#post_image_preview img{
+    width: 100px;
+    height: 90px;
+    margin: 3px;
+    margin-right: 1px;
+    object-fit: cover;
+}
+
+#close_post_window:hover{
+    cursor: pointer;
+}
+
+#post_image_section{
+    position: relative;
+    width: 50%;
+    height: 80%;
+    left: 25%;
+    right: 25%;
+    top: 9%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: inline-flex;
+    padding: 5px 5px 5px 5px;
+}
+
+#post_image_section .image_preview{
+    position: relative;
+    height: 80%;
+}
+
+#post_image_section .image_preview img{
+    position: relative;
+    width: 100%;
+    height: 99%;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+#post_image_section .next_preview{
+    display: inline-flex;
+    position: relative;
+    height: 20%;
+    background-color: rgb(80, 79, 79);
+    overflow-x: auto;
+}
+
+#post_image_section .next_preview img{
+    width: 120px;
+    height: 100%;
+    margin-right: 4px;
+    object-fit: cover;
+}
+
+#post_image_section .next_preview img:hover{
+    opacity: .5;
+    cursor: pointer;
+}
+
+#close_image_preview{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    padding: 5px 7px 5px 7px;
+    background-color: rgba(0, 0, 0, 1);
+    color: rgb(255, 255, 255);
+    font-size: 17pt;
+    border-radius: 5px;
+    z-index: 99;
+    opacity: .5;
+    transition: opacity .5s;
+}
+
+#close_image_preview:hover{
+    opacity: 1;
+    cursor: pointer;
+}
+
+#profile_menu_tab{
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    background-color: rgb(254, 134, 34);
+}
+
+#profile_menu_tab button{
+    width: 20%;
+    border-radius: 0;
+    border: 0;
+    border-right: 2px solid rgb(255, 255, 255);
+}
+
+#profile_menu_tab button:focus{
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+}
+
+#closeUsersProfileWin{
+    padding: 5px 7px 5px 7px;
+    border-radius: 3px;
+    background-color: rgba(0, 0, 0, 1);
+    color: rgb(255, 255, 255);
+    font-size: 17pt;
+    margin: 5px;
+    opacity: .5;
+    transition: opacity .5s;
+}
+
+#closeUsersProfileWin:hover{
+    cursor: pointer;
+    opacity: 1;
+}
+
+.currentUserPosts li b{
+    position: relative;
+    top: 3px;
+    font-size: 17pt;
+}
+
+#editSurname,
+#editName{
+    width: 40%;
+}
+
+#FindUser{
+    display: inline-flex;
+    margin: 0;
+    width: 100%;
+    border-radius: 0;
+    border: 0;
+    color: rgba(0, 0, 0, 1);
+}
+
+#FindUser input:focus{
+    outline: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+}
+
+#FindUser{
+    display: none;
+}
+
+#close_user_search:hover{
+    cursor: pointer;
+}
+
+#report_section{
+    position: relative;
+    width: 30%;
+    left: 35%;
+    right: 35%;
+    top: 10%;
+    height: 60%;
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+}
+
+#logo:hover{
+    cursor: pointer;
 }
